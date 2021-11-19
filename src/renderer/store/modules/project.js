@@ -1,7 +1,7 @@
-import { isFlowDeclaration } from '@babel/types'
 import axios from 'axios'
 import * as types from '../mutation-types'
 import Cookies from 'js-cookie'
+import { ipcRenderer } from 'electron'
 
 export const state = {
   projectList: [],
@@ -143,7 +143,7 @@ export const mutations = {
 
 export const actions = {
   async listProjects ({commit}) {
-    const { data } = await axios.post('/api/listProjects')
+    const data = ipcRenderer.sendSync('listProjects')
 
     if (typeof(data) == 'string') {
       let payload = JSON.parse(data)
@@ -155,26 +155,31 @@ export const actions = {
     }
   },
   async createProject ({commit}, projectName) {
-    const { data } = await axios.post('/api/createProject', {'project': projectName})
-
+    const data = ipcRenderer.sendSync('createProject', projectName)   
     let payload = JSON.parse(data.content)
     payload.id = data.id
     commit(types.LOAD_PROJECT, {projectName, payload})
-
   },
   async openProject({commit}, project) {
     let id = project.id
     let projectName = project.name
 
-    const { data } = await axios.post('/api/openProject', { 'id': id, 'project': projectName})
+    if (id === undefined)
+      return
 
+    // const { data } = await axios.post('/api/openProject', { 'id': id, 'project': projectName})
+    const data = ipcRenderer.sendSync('openProject', id)
+    debugger    
+    
     let payload = JSON.parse(data.content)
     payload.id = data.id
     commit(types.LOAD_PROJECT, {projectName, payload})
 
   },
   async saveProject({commit}, payload) {
-    const { data } = await axios.post('api/saveProject', payload)    
+    // const { data } = await axios.post('api/saveProject', payload)
+    debugger
+    const data = ipcRenderer.sendSync('saveProject', payload)
   },
   saveFastPlan ({commit}, payload) {
     const isFDP = payload.isFDP

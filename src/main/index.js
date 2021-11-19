@@ -1,5 +1,6 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import pkg from '../../package.json'
+import { DBinitialize  } from './database'
 
 require('@electron/remote/main').initialize()
 
@@ -64,6 +65,9 @@ function createWindow() {
     },
     show: false,
   })
+
+  // create Project database
+  DBinitialize()
 
   // eslint-disable-next-line
   setMenu()

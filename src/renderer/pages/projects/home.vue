@@ -95,7 +95,7 @@ export default {
   data() {
     return {
       myProjectName : "",
-      existProject: "",
+      existProject: null,
       isLoading: false,
       fullPage: true,
       description: "",
@@ -120,6 +120,7 @@ export default {
       modal.style.display = "none";
     },
     onCreatePage: async function(event) {
+      debugger
       if (this.myProjectName=="")
       {
         var modal = document.getElementById("issueModal");
@@ -135,7 +136,8 @@ export default {
       this.$router.replace({ name: 'fastplan' })
     },
     onOpenPage: async function(event) {
-      if (this.existProject==null)
+      debugger
+      if (this.existProject==null || this.existProject == "")
       {
         var modal = document.getElementById("issueModal");
         this.description = "Please choose existing project's name"
