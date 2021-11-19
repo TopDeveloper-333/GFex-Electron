@@ -134,6 +134,7 @@ const config = {
     alias: {
       vue$: 'vue/dist/vue.common.js',
       '@': path.join(__dirname, '../src/'),
+      '~': path.join(__dirname, '../src/renderer/'),
       src: path.join(__dirname, '../src/'),
       icons: path.join(__dirname, '../_icons/'),
     },

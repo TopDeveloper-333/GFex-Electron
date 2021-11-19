@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="container-fluid">
+    <navbar />
     <Transition mode="out-in" name="slide-up">
       <!-- <keep-alive> -->
       <RouterView />
@@ -10,9 +11,16 @@
 
 <script>
 import Vue from 'vue'
+import Navbar from '~/components/Navbar.vue'
 
 export default Vue.extend({
-  name: 'ImageParsing',
+  name: 'MainApp',
+
+  components: {
+    Navbar
+  },
+
+
 })
 </script>
 

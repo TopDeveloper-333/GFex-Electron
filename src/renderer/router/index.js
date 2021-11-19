@@ -1,45 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import About from '../views/About.vue'
-import Help from '../views/Help.vue'
-import Home from '../views/Home.vue'
+import Welcome from '../views/welcome.vue'
+import Home from '../pages/projects/home.vue'
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [
-    {
-      path: '/',
-      redirect: '/home',
-    },
-    {
-      path: '/home',
-      meta: {
-        title: 'Home',
-        icon: 'fa-home',
-      },
-      component: Home,
-    },
-    {
-      path: '/about',
-      meta: {
-        title: 'About',
-        icon: 'fa-info-circle',
-      },
-      component: About,
-    },
-    {
-      path: '/help',
-      meta: {
-        title: 'Help',
-        icon: 'fa-info-circle',
-      },
-      component: Help,
-    },
-    {
-      path: '*',
-      redirect: '/home',
-    },
+    { path: '/', redirect: '/welcome'},
+    { path: '/welcome', component: Welcome},
+    { path: '/home', name: 'home', component: Home },
+
+
+    { path: '*', redirect: '/welcome' },
   ],
 })
 

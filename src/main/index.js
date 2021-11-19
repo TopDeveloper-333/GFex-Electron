@@ -140,23 +140,23 @@ const sendMenuEvent = async (data) => {
 }
 
 const template = [
-  {
-    label: app.name,
-    submenu: [
-      {
-        label: 'Home',
-        accelerator: 'CommandOrControl+H',
-        click() {
-          sendMenuEvent({ route: '/' })
-        },
-      },
-      { type: 'separator' },
-      { role: 'minimize' },
-      { role: 'togglefullscreen' },
-      { type: 'separator' },
-      { role: 'quit', accelerator: 'Alt+F4' },
-    ],
-  },
+  // {
+  //   label: app.name,
+  //   submenu: [
+  //     {
+  //       label: 'Home',
+  //       accelerator: 'CommandOrControl+H',
+  //       click() {
+  //         sendMenuEvent({ route: '/' })
+  //       },
+  //     },
+  //     { type: 'separator' },
+  //     { role: 'minimize' },
+  //     { role: 'togglefullscreen' },
+  //     { type: 'separator' },
+  //     { role: 'quit', accelerator: 'Alt+F4' },
+  //   ],
+  // },
   {
     role: 'help',
     submenu: [
@@ -182,24 +182,24 @@ const template = [
 
 function setMenu() {
   if (process.platform === 'darwin') {
-    template.unshift({
-      label: app.name,
-      submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' },
-      ],
-    })
+    // template.unshift({
+    //   label: app.name,
+    //   submenu: [
+    //     { role: 'about' },
+    //     { type: 'separator' },
+    //     { role: 'services' },
+    //     { type: 'separator' },
+    //     { role: 'hide' },
+    //     { role: 'hideothers' },
+    //     { role: 'unhide' },
+    //     { type: 'separator' },
+    //     { role: 'quit' },
+    //   ],
+    // })
 
-    template.push({
-      role: 'window',
-    })
+    // template.push({
+    //   role: 'window',
+    // })
 
     template.push({
       role: 'help',

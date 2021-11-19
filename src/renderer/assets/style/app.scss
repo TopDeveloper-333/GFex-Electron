@@ -1,0 +1,304 @@
+@import 'variables';
+
+@import '~bootstrap/scss/bootstrap';
+@import '~sweetalert2/dist/sweetalert2';
+@import '~@fortawesome/fontawesome-svg-core/styles';
+
+@import 'elements/card';
+@import 'elements/navbar';
+@import 'elements/buttons';
+@import 'elements/transitions';
+@import 'elements/switch';
+
+@import 'components/server-error';
+
+body {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.gf-header {
+  //padding: 0.8rem 1rem !important;
+  background:#0d6efd;
+  color:white;
+  text-align:center; 
+  font-size:4rem !important;
+  font-weight: 600;
+}
+
+.gf-title {
+  font-size: 4.5rem !important;
+  text-align:center !important;
+}
+
+.gf-comment {
+  font-size: 1.75rem !important;
+  text-align: center !important;
+}
+
+.gf-line {
+  background-color: black;
+  opacity: 1 !important;
+  height: 2px !important;
+  margin-bottom: 20px;
+}
+
+.gf-item {
+  font-size: 2rem !important;
+}
+
+.gf-subitem {
+  font-size: 1.4rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.gf-button {
+  font-size : 1.5rem !important;
+  text-transform: uppercase !important;
+  font-weight: 600;
+}
+.gf-button-active {
+  font-size : 1.5rem !important;
+  text-transform: uppercase !important;
+  color: rgb(253, 245, 0) !important;
+  font-style: italic;
+  // transform: translateY(-4px);
+  font-weight: 600;
+}
+.gf-button-done {
+  font-size : 1.5rem !important;
+  color: white !important;
+  text-transform: uppercase !important;
+  background-color: green !important;
+  border: 1px solid green;
+  font-style: italic;
+  font-weight: 600;
+}
+.gf-button-done-active {
+  font-size : 1.5rem !important;
+  text-transform: uppercase !important;
+  color: rgb(253, 245, 0) !important;
+  background-color: green !important;
+  border: 1px solid green;
+  font-style: italic;
+  // transform: translateY(-4px);
+  font-weight: 600;
+}
+
+
+.gf-nav-item {
+  font-size:1.25rem !important;
+}
+
+.gf-control {
+  font-size : 1.5rem !important;
+}
+
+td:empty::after{
+  content: "\00a0";
+}
+
+.jexcel_textarea {
+  top: -3999px !important;
+  left: -3999px !important;
+  color: white !important;
+}
+
+thead.resizable {
+  font-weight: 600;
+}
+
+.pushable {
+  background: hsl(340deg 100% 32%);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+}
+.front {
+  display: block;
+  padding: 12px 42px;
+  background: hsl(345deg 100% 47%);
+  color: white;
+  transform: translateY(-6px);
+}
+
+.pushable:active .front {
+  transform: translateY(-2px);
+}
+
+/* The Modal (background) */
+.gf-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 5; /* Sit on top */
+  padding-top: 300px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.gf-modal-header{
+  background-color: #0d6efd;
+  border-radius: 3px 3px 0px 0px;
+  text-align: center;
+  padding: 10px;
+}
+
+/* Modal Content */
+.gf-modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  // padding: 20px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  width: 40%;
+  text-align: center;
+}
+
+/* The Close Button */
+.gf-close {
+  color: #ffffff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.gf-close:hover,
+.gf-close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+.card-body {
+  min-height: 800px;
+}
+
+.multiselect__tags {
+  font-size: 22px !important;
+  font-weight: 600 !important;
+}
+
+.multiselect__input, .multiselect__single {
+  font-size: 22px !important;
+  text-align: center;
+}
+
+.jexcel > thead > tr > td {
+  font-size: 22px;
+  background-color: green !important;
+  border-top: 0px !important;
+  color: white;
+}
+
+.jexcel > tbody > tr > td {
+  font-size: 22px;
+  background-color: green;
+  border-top: 0px !important;
+  color: white;
+}
+.jexcel .highlight-selected {
+  background-color: rgb(53, 124, 53) !important;
+  color: white !important;
+}
+
+.jexcel .highlight-bottom {
+  border-bottom: 1px solid white !important;
+}
+.jexcel .highlight-right {
+  border-right: 1px solid white !important;
+}
+.jexcel .highlight-left {
+  border-left: 1px solid white !important;
+  box-shadow: -1px 0px #ccc;
+}
+.jexcel .highlight-top {
+  border-top: 1px solid white !important;
+  box-shadow: 0px -1px #ccc;
+}
+.jexcel .highlight {
+  background-color: rgb(53, 124, 53) !important;
+}
+.jcalendar .jcalendar-content {
+  color: black;
+}
+
+
+:root {
+  --axis-color : white;
+  --graph-color : #ffbb78;
+  --graph1-color : #b9ff78;
+  --graph2-color : #a178ff;
+  --graph3-color : #ff78f4;
+}
+
+.c3-axis-y-label {
+  font-size: 1.5rem !important;
+  fill: var(--axis-color) !important; 
+}
+
+.c3-axis-y2-label {
+  font-size: 1.5rem !important;
+  fill: var(--axis-color) !important; 
+}
+
+.c3-axis-x-label {
+  font-size: 1.5rem !important;
+  fill: var(--axis-color) !important; 
+}
+
+.c3-axis {
+  stroke-width: 4px !important;
+}
+
+/* .c3 svg {
+  font-size: 13px !important;
+} */
+
+.c3 path {
+  // stroke: var(--graph-color) !important;
+  stroke-width: 4px;
+}
+.c3-circle {
+  // fill: var(--graph-color) !important;
+  stroke-width: 4px;
+}
+
+.c3 line {
+  stroke-width: 2px;
+}
+
+.c3 path.domain {
+  stroke: var(--axis-color) !important;
+  stroke-width: 4px;
+}
+
+g.tick line {
+  stroke: var(--axis-color) !important;
+  stroke-width: 4px;
+}
+
+.c3 text {
+  font: bold 22px sans-serif; 
+  fill: var(--axis-color); 
+}
+
+tspan {
+  font: bold 16px sans-serif; 
+  fill: var(--axis-color) !important; 
+}
+
+.c3-legend-background {
+  visibility: hidden !important;
+}
+
+.c3-legend-item-tile {
+  // stroke: var(--graph-color) !important;
+  stroke-width: 4px;
+}

@@ -1,0 +1,6 @@
+import './axios'
+import './fontawesome'
+import 'bootstrap'
+import './tablevalidation'
+import './project'
+import './vuetify'
