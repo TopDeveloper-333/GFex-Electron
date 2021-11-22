@@ -13,6 +13,7 @@ Vue.config.devtools = isDev
 Vue.config.performance = isDev
 Vue.config.productionTip = isDev
 
+
 // tslint:disable-next-line: no-unused-expression
 new Vue({
   el: '#app',

@@ -7,7 +7,7 @@
       <div class="card mb-3">
         <div class="card-header gf-header">
           <img src="../../assets/image/LOGO_GFEX.png" style="max-width:150px;max-height:180px;margin-left:-7px;float:left">
-          FastPlan* Gas & Gas Condensate<br>
+          <p>FastPlan* Gas & Gas Condensate</p><br>
           <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
         </div>
         <div class="row g-0" style="background-color:#fdf500;">
@@ -120,7 +120,6 @@ export default {
       modal.style.display = "none";
     },
     onCreatePage: async function(event) {
-      debugger
       if (this.myProjectName=="")
       {
         var modal = document.getElementById("issueModal");
@@ -136,7 +135,6 @@ export default {
       this.$router.replace({ name: 'fastplan' })
     },
     onOpenPage: async function(event) {
-      debugger
       if (this.existProject==null || this.existProject == "")
       {
         var modal = document.getElementById("issueModal");

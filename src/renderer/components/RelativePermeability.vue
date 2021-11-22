@@ -133,6 +133,14 @@ export default {
   },
 
   methods: {
+    markInvalidCell: function(cell) {
+      cell.style.backgroundColor = '#f46e42'
+      cell.style.color = 'white'
+    },
+    markNormalCell: function(cell) {
+      cell.style.backgroundColor = 'green'
+      cell.style.color = 'white'
+    },
     onSavePage: async function(event) {
       console.log("RelPerm's onSavePage() is called")
 

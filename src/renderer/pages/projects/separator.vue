@@ -213,6 +213,14 @@ export default {
   },
 
   methods: {
+    markInvalidCell: function(cell) {
+      cell.style.backgroundColor = '#f46e42'
+      cell.style.color = 'white'
+    },
+    markNormalCell: function(cell) {
+      cell.style.backgroundColor = 'green'
+      cell.style.color = 'white'
+    },
     validateOriginalStream1:function(instance, cell, col, row, val, label, cellName) {
       let value = parseFloat(val)
 

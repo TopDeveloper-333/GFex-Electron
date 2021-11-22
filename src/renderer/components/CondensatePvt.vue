@@ -147,6 +147,14 @@ export default {
   },
 
   methods: {
+    markInvalidCell: function(cell) {
+      cell.style.backgroundColor = '#f46e42'
+      cell.style.color = 'white'
+    },
+    markNormalCell: function(cell) {
+      cell.style.backgroundColor = 'green'
+      cell.style.color = 'white'
+    },
     onOK: function(event) {
         var modal = document.getElementById("plotModal");
         modal.style.display = "none";

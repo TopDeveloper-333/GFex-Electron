@@ -67,8 +67,8 @@ export const mutations = {
     state.projectList = projectList
   },
   [types.LOAD_PROJECT] (state, {projectName, payload}) {
-    debugger
     console.log('LOAD_PROJECT')
+    debugger
     state.projectName = projectName
     state.projectId = payload.id
     state.isFDP = payload.fastplan.isFDP
@@ -169,8 +169,6 @@ export const actions = {
 
     // const { data } = await axios.post('/api/openProject', { 'id': id, 'project': projectName})
     const data = ipcRenderer.sendSync('openProject', id)
-    debugger    
-    
     let payload = JSON.parse(data.content)
     payload.id = data.id
     commit(types.LOAD_PROJECT, {projectName, payload})
