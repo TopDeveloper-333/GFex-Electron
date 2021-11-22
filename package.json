@@ -98,6 +98,10 @@
     "type": "git",
     "url": "git+https://github.com/mubaidr/vue-electron-template.git"
   },
+  "build" : {
+    "appId": "com.gfex.fastplan",
+    "extraFiles": ["./data/*.exe"]
+  },
   "scripts": {
     "build": "run-s rebuild:electron pack build-release",
     "build-release": "node _scripts/build.js",

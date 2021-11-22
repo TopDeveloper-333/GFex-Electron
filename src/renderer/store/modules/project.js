@@ -68,7 +68,6 @@ export const mutations = {
   },
   [types.LOAD_PROJECT] (state, {projectName, payload}) {
     console.log('LOAD_PROJECT')
-    debugger
     state.projectName = projectName
     state.projectId = payload.id
     state.isFDP = payload.fastplan.isFDP
@@ -228,7 +227,7 @@ export const actions = {
   },
   async fetchKGKO({commit}, relPerm) {
     commit(types.SAVE_REL_PERM, relPerm)
-    const { data } = await axios.post('/api/requestKGKO', relPerm)
+    const data = ipcRenderer.sendSync('requestKGKO', relPerm)
 
     if (typeof (data) == 'string') {
       commit(types.SAVE_RES_KGKO, JSON.parse(data))      
