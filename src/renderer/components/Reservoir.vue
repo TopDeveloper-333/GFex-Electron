@@ -97,7 +97,6 @@ export default {
 
   watch: {
     dualPorosity: function(val, oldVal) {
-      debugger
       this.onSavePage(null)
     },
     isDataValidate: function(val, oldVal) {

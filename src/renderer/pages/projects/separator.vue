@@ -213,6 +213,36 @@ export default {
   },
 
   methods: {
+    onSaveProject: async function() {
+      
+      let payload = {}
+
+      if (this.newProjectName != "") {
+        payload.projectName = this.newProjectName
+        payload.isSaveAs = true
+      }
+      else {
+        payload.projectName = this.projectName
+        payload.isSaveAs = false
+      }
+
+      payload.projectId = this.projectId
+      payload.isFDP = this.isFDP
+      payload.isCondensate = this.isCondensate
+      payload.isEconomics = this.isEconomics
+      payload.isSeparatorOptimizer = this.isSeparatorOptimizer
+      payload.sep = this.sep
+      payload.drygas = this.drygas
+      payload.surface = this.surface
+      payload.reservoir = this.reservoir
+      payload.wellhistory = this.wellhistory
+      payload.economics = this.economics
+      payload.operations = this.operations
+      payload.relPerm = this.relPerm 
+      payload.gascondensate = this.gascondensate
+      payload.resKGKO = this.resKGKO
+      await store.dispatch('project/saveProject', payload)
+    },
     markInvalidCell: function(cell) {
       cell.style.backgroundColor = '#f46e42'
       cell.style.color = 'white'
@@ -316,7 +346,6 @@ export default {
       let value = parseFloat(val)
 
       if (cellName == 'A1') {
-        debugger
         this.updateNumberValidate(instance, true)
       }
 
@@ -418,7 +447,6 @@ export default {
           // update other tables
           if (instance.id == 'setNumber1Sheet')
           {
-            debugger
             if (this.setNumber2Sheet != null)  // skip init
             {
               this.setNumber2Sheet.setValue('A1', this.setNumber2Sheet.getValue('A1'), true)
@@ -812,9 +840,10 @@ export default {
     //   // [,],
     //   // [,],
     // ];
-    debugger
     let setNumber1Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber1 != null) {
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber1 != null && 
+        this.mySEP.separatorConditions.setNumber1.length > 0) {
       this.mySEP.separatorConditions.setNumber1.forEach(element => {
         setNumber1Data.push(element)      
       });
@@ -834,7 +863,9 @@ export default {
     //   // [,]
     // ];
     let setNumber2Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber2 != null){
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber2 != null && 
+        this.mySEP.separatorConditions.setNumber2.length > 0){
       this.mySEP.separatorConditions.setNumber2.forEach(element => {
         setNumber2Data.push(element)
       });
@@ -852,7 +883,9 @@ export default {
     //   [, ],
     // ];
     let setNumber3Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber3 != null) {
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber3 != null && 
+        this.mySEP.separatorConditions.setNumber3.length > 0) {
       this.mySEP.separatorConditions.setNumber3.forEach(element => {
         setNumber3Data.push(element)
       });
@@ -870,7 +903,9 @@ export default {
     //   [, ],
     // ];
     let setNumber4Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber4 != null) {
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber4 != null && 
+        this.mySEP.separatorConditions.setNumber4.length > 0) {
       this.mySEP.separatorConditions.setNumber4.forEach(element => {
         setNumber4Data.push(element)
       });
@@ -888,7 +923,9 @@ export default {
     //   [, ],
     // ];
     let setNumber5Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber5 != null){
+    if (this.mySEP != null && this.mySEP.separatorConditions != null &&   
+        this.mySEP.separatorConditions.setNumber5 != null && 
+        this.mySEP.separatorConditions.setNumber5.length > 0){
       this.mySEP.separatorConditions.setNumber5.forEach(element => {
         setNumber5Data.push(element)
       });
@@ -906,7 +943,9 @@ export default {
     //   [, ],
     // ];
     let setNumber6Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber6 != null){
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber6 != null && 
+        this.mySEP.separatorConditions.setNumber6.length > 0){
       this.mySEP.separatorConditions.setNumber6.forEach(element => {
         setNumber6Data.push(element)
       });
@@ -924,7 +963,9 @@ export default {
     //   [, ],
     // ];
     let setNumber7Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber7 != null){
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber7 != null && 
+        this.mySEP.separatorConditions.setNumber7.length > 0){
       this.mySEP.separatorConditions.setNumber7.forEach(element => {
         setNumber7Data.push(element)
       });
@@ -942,7 +983,9 @@ export default {
     //   [, ],
     // ];
     let setNumber8Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber8 != null){
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber8 != null && 
+        this.mySEP.separatorConditions.setNumber8.length > 0){
       this.mySEP.separatorConditions.setNumber8.forEach(element => {
         setNumber8Data.push(element)
       });
@@ -960,7 +1003,9 @@ export default {
     //   [, ],
     // ];
     let setNumber9Data = []
-    if (this.mySEP != null && this.mySEP.separatorConditions != null && this.mySEP.separatorConditions.setNumber9 != null) {
+    if (this.mySEP != null && this.mySEP.separatorConditions != null && 
+        this.mySEP.separatorConditions.setNumber9 != null && 
+        this.mySEP.separatorConditions.setNumber9.length > 0) {
       this.mySEP.separatorConditions.setNumber9.forEach(element => {
         setNumber9Data.push(element)
       });

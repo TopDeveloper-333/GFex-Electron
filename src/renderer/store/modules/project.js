@@ -120,7 +120,6 @@ export const mutations = {
     state.relPerm = relPerm
   },
   [types.UPDATE_RES_KGKO] (state, resKGKO) {
-    debugger
     state.resKGKO = resKGKO
   },
   [types.SAVE_RES_KGKO] (state, resKGKO) {
@@ -174,8 +173,6 @@ export const actions = {
 
   },
   async saveProject({commit}, payload) {
-    // const { data } = await axios.post('api/saveProject', payload)
-    debugger
     const data = ipcRenderer.sendSync('saveProject', payload)
   },
   saveFastPlan ({commit}, payload) {
@@ -216,7 +213,7 @@ export const actions = {
     commit(types.UPDATE_RES_KGKO, resKGKO)
   },
   async fetchSEP ({commit}, sep) {
-    const { data } = await axios.post('/api/requestOPT', sep)
+    const data = ipcRenderer.sendSync('requestOPT', sep)
 
     if (typeof (data) == 'string') {
       commit(types.SAVE_RES_OPTIMIZER, JSON.parse(data))
@@ -237,7 +234,7 @@ export const actions = {
     }    
   },
   async fetchCvdOut({commit}, cvd) {
-    const { data } = await axios.post('/api/requestCvdOut', cvd)
+    const data = ipcRenderer.sendSync('requestCvdOut', cvd)
 
     if (typeof (data) == 'string') {
       commit(types.SAVE_RES_CVDOUT, JSON.parse(data))      
@@ -247,7 +244,7 @@ export const actions = {
     }    
   },
   async runDryGasProject({commit}, payload) {
-    const { data } = await axios.post('/api/runDryGas', payload)
+    const data = ipcRenderer.sendSync('runDryGas', payload)
     if (typeof (data) == 'string') {
       commit(types.SAVE_RES_FASTPLAN, JSON.parse(data))      
     }
@@ -256,7 +253,7 @@ export const actions = {
     }
   },
   async runMonitoringProject({commit}, payload) {
-    const { data } = await axios.post('/api/runMonitoring', payload)
+    const data = ipcRenderer.sendSync('runMonitoring', payload)
     if (typeof (data) == 'string') {
       commit(types.SAVE_RES_MONITORING, JSON.parse(data))      
     }
@@ -265,7 +262,7 @@ export const actions = {
     }
   },
   async runGasCondensateProject({commit}, payload) {
-    const { data } = await axios.post('/api/runGasCondensate', payload)
+    const data = ipcRenderer.sendSync('runGasCondensate', payload)
     if (typeof (data) == 'string') {
       commit(types.SAVE_RES_FASTPLAN, JSON.parse(data))      
     }

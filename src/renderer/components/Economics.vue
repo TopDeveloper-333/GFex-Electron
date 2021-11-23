@@ -346,7 +346,8 @@ export default {
     // ];
 
     let economicsData = []
-    if (this.myEconomics != null && this.myEconomics.economics != null){
+    if (this.myEconomics != null && this.myEconomics.economics != null && 
+        this.myEconomics.economics.length > 0) {
       this.myEconomics.economics.forEach(element => {
         economicsData.push(element)
       });

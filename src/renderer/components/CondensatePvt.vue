@@ -160,6 +160,7 @@ export default {
         modal.style.display = "none";
     },
     onCalculate: async function(event) {
+      debugger
       this.isLoading = true
       await this.onSavePage(null)
 
@@ -322,19 +323,20 @@ export default {
       this.myGasCondensate.gasCondensate1.Psat = this.gasCondensate1Sheet.getValue('A1');
       this.myGasCondensate.gasCondensate1.Swi = this.gasCondensate1Sheet.getValue('B1');
 
-      var numRows = this.gasCondensate2Sheet.options.data.length;
-      for (var i =0; i < numRows; i++) {
-        this.myGasCondensate.gasCondensate2[i] = [0, 0, 0, 0, 0, 0, 0, 0];
-        this.myGasCondensate.gasCondensate2[i][0] = this.gasCondensate2Sheet.getValue('A' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][1] = this.gasCondensate2Sheet.getValue('B' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][2] = this.gasCondensate2Sheet.getValue('C' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][3] = this.gasCondensate2Sheet.getValue('D' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][4] = this.gasCondensate2Sheet.getValue('E' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][5] = this.gasCondensate2Sheet.getValue('F' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][6] = this.gasCondensate2Sheet.getValue('G' + (i+1));
-        this.myGasCondensate.gasCondensate2[i][7] = this.gasCondensate2Sheet.getValue('H' + (i+1));
+      if (this.gasCondensate2Sheet != null) {
+        var numRows = this.gasCondensate2Sheet.options.data.length;
+        for (var i =0; i < numRows; i++) {
+          this.myGasCondensate.gasCondensate2[i] = [0, 0, 0, 0, 0, 0, 0, 0];
+          this.myGasCondensate.gasCondensate2[i][0] = this.gasCondensate2Sheet.getValue('A' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][1] = this.gasCondensate2Sheet.getValue('B' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][2] = this.gasCondensate2Sheet.getValue('C' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][3] = this.gasCondensate2Sheet.getValue('D' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][4] = this.gasCondensate2Sheet.getValue('E' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][5] = this.gasCondensate2Sheet.getValue('F' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][6] = this.gasCondensate2Sheet.getValue('G' + (i+1));
+          this.myGasCondensate.gasCondensate2[i][7] = this.gasCondensate2Sheet.getValue('H' + (i+1));
+        }
       }
-
       await store.dispatch('project/saveGasCondensate', this.myGasCondensate)
     },
     onPrintGraph: async function(event) {
@@ -655,7 +657,8 @@ export default {
     this.cvdData1Sheet.hideIndex();
 
     let cvdSheetData2 = []
-    if (this.myGasCondensate != null && this.myGasCondensate.cvdData2 != null) {
+    if (this.myGasCondensate != null && this.myGasCondensate.cvdData2 != null &&
+        this.myGasCondensate.cvdData2.length > 0) {
       this.myGasCondensate.cvdData2.forEach(element => {
         cvdSheetData2.push(element)      
       });
@@ -765,7 +768,8 @@ export default {
     // ];
 
     let gasCondensate2Data = []
-    if (this.myGasCondensate != null && this.myGasCondensate.gasCondensate2 != null) {
+    if (this.myGasCondensate != null && this.myGasCondensate.gasCondensate2 != null && 
+        this.myGasCondensate.gasCondensate2.length > 0) {
       this.myGasCondensate.gasCondensate2.forEach(element => {
         gasCondensate2Data.push(element)      
       });

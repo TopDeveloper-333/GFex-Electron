@@ -32,6 +32,7 @@
                               @changedValidate="updateReservoirValidate($event)">
               </reservoir>
               <well-history v-show="screenType==='WELLHISTORY_SCREEN'" ref="wellHistoryControl" 
+                              v-bind:isHidden="!(isEconomics != true && isCondensate!='1' && isFDP =='0')"
                               @changedValidate="updateWellHistoryValidate($event)">
               </well-history>
               <economics v-show="screenType==='ECONOMICS_SCREEN'" ref="economicsControl" 
@@ -235,6 +236,58 @@ export default {
   },
 
   methods: {
+    runGasCondensateProject: async function() {
+      let payload = {}
+
+      payload.projectName = this.projectName
+
+      payload.projectId = this.projectId
+      payload.isFDP = this.isFDP
+      payload.isCondensate = this.isCondensate
+      payload.isEconomics = this.isEconomics
+      payload.isSeparatorOptimizer = this.isSeparatorOptimizer
+      payload.sep = this.sep
+      payload.drygas = this.drygas
+      payload.surface = this.surface
+      payload.reservoir = this.reservoir
+      // payload.wellhistory = this.wellhistory
+      payload.economics = this.economics
+      payload.operations = this.operations
+      payload.relPerm = this.relPerm 
+      payload.resKGKO = this.resKGKO
+      payload.gascondensate = this.gascondensate
+      await store.dispatch('project/runGasCondensateProject', payload)
+    },
+    onSaveProject: async function() {
+     
+      let payload = {}
+
+      if (this.newProjectName != "") {
+        payload.projectName = this.newProjectName
+        payload.isSaveAs = true
+      }
+      else {
+        payload.projectName = this.projectName
+        payload.isSaveAs = false
+      }
+
+      payload.projectId = this.projectId
+      payload.isFDP = this.isFDP
+      payload.isCondensate = this.isCondensate
+      payload.isEconomics = this.isEconomics
+      payload.isSeparatorOptimizer = this.isSeparatorOptimizer
+      payload.sep = this.sep
+      payload.drygas = this.drygas
+      payload.surface = this.surface
+      payload.reservoir = this.reservoir
+      payload.wellhistory = this.wellhistory
+      payload.economics = this.economics
+      payload.operations = this.operations
+      payload.relPerm = this.relPerm 
+      payload.gascondensate = this.gascondensate
+      payload.resKGKO = this.resKGKO
+      await store.dispatch('project/saveProject', payload)
+    },
     updatePVTValidate (pvt) {
       this.isPVTValidate = pvt
     },
