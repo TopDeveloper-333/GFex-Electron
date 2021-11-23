@@ -166,14 +166,20 @@ export default {
       this.myReservoir.reservoirParameters.GIIP = this.reservoirParametersSheet.getValue('A1')
       this.myReservoir.reservoirParameters.ReservoirPressure = this.reservoirParametersSheet.getValue('B1')
 
-      this.myReservoir.hasDualPorosity = this.dualPorosity.value
+      if (this.dualPorosity != null)
+        this.myReservoir.hasDualPorosity = this.dualPorosity.value
+      else
+        this.myReservoir.hasDualPorosity = 0
 
       this.myReservoir.dualPorosity.km = this.dualPorositySheet.getValue('A1')
       this.myReservoir.dualPorosity.hm = this.dualPorositySheet.getValue('B1')
       this.myReservoir.dualPorosity.ShapeFactorSigma = this.dualPorositySheet.getValue('C1')
       this.myReservoir.dualPorosity.MatrixGIIP = this.dualPorositySheet.getValue('D1')
 
-      this.myReservoir.wellTestData = this.testWellData.value
+      if (this.testWellData != null)
+        this.myReservoir.wellTestData = this.testWellData.value
+      else 
+        this.myReservoir.wellTestData = 0
 
       this.myReservoir.cnModel.C = this.cnModelSheet.getValue('A1')
       this.myReservoir.cnModel.n = this.cnModelSheet.getValue('B1')
