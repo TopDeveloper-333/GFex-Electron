@@ -93,6 +93,10 @@ export function DBinitialize() {
     }
 
     let removeUnnecessaries = function () {
+      if (fs.existsSync(path.join(__dirname, '../data/SEP.IN'))) {
+        fs.unlinkSync(path.join(__dirname, '../data/SEP.IN'))
+      }
+
       if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.BAK'))) {
         fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.BAK'))
       }
@@ -886,8 +890,8 @@ export function DBinitialize() {
     let createGasCondensate = (gasCondensate) => {
       let contents = ""
 
-      contents = contents + gascondensate.gasCondensate1.Psat + ' '
-      contents = contents + gascondensate.gasCondensate1.Swi + '\n'
+      contents = contents + gasCondensate.gasCondensate1.Psat + ' '
+      contents = contents + gasCondensate.gasCondensate1.Swi + '\n'
 
       gasCondensate.gasCondensate2.forEach(element => {
         contents = contents + element[0] + ' '
@@ -899,6 +903,7 @@ export function DBinitialize() {
         contents = contents + element[6] + ' '
         contents = contents + element[7] + '\n'
       });
+
 
       let filePath = path.join(__dirname, '../data/PINE.in')
       fs.appendFileSync(filePath, contents)
@@ -1004,8 +1009,7 @@ export function DBinitialize() {
       contents = contents + reservoir.reservoirPVT.Viscosity + ' '
       contents = contents + reservoir.reservoirPVT.GasZFactor + ' '
       contents = contents + reservoir.reservoirPVT.SpecificGravity + ' '
-      contents = contents + reservoir.reservoirPVT.ReservoirTemperature + ' '
-      contents = contents + reservoir.reservoirPVT.Viscosity + '\n'
+      contents = contents + reservoir.reservoirPVT.ReservoirTemperature + '\n'
 
       contents = contents + reservoir.reservoirParameters.GIIP + ' '
       contents = contents + reservoir.reservoirParameters.ReservoirPressure + '\n'
@@ -1224,6 +1228,196 @@ export function DBinitialize() {
       }
     });
 
+    ipcMain.on('runMonitoring', async (event, payload) => {
+      try {
+        removeUnnecessaries()
+
+        //
+        // create contents
+        // 
+        let content =  {
+          fastplan: {
+            isFDP: payload.isFDP, 
+            isCondensate: payload.isCondensate,
+            isEconomics: payload.isEconomics,
+            isSeparatorOptimizer: payload.isSeparatorOptimizer
+          },
+          drygas: payload.drygas,
+          surface: payload.surface,
+          reservoir: payload.reservoir,
+          wellhistory: payload.wellhistory,
+          economics: payload.economics,
+          operations: payload.operations,
+        }
+
+        console.log("RunMonitoring: " + JSON.stringify(content))
+
+        createFastPlan(content.fastplan)
+        createDryGas(content.drygas)
+        createSurface(content.surface)
+        createReservoirMon(content.reservoir)
+        createWellHistory(content.wellhistory)
+
+        // launch ConsoleApplicationFDPHIST.exe
+        let command = path.resolve(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'))
+        console.log('command: ' + command)
+        let appResult = require('child_process').execSync(
+          command,
+          {
+            cwd: path.resolve(path.join(__dirname, '../data/')),
+            stdio: 'inherit'
+          }
+        );
+
+        // -----------------------------
+        // get the result        
+        // 
+
+        // Parse WELLXXX.OUT files
+        let result = {}
+        result.NumberOfWells = content.wellhistory.numberOfWells
+        console.log('NumberOfWells : ' + result.NumberOfWells)
+
+        for (let index = 0; index < result.NumberOfWells; index++) {
+          const fileName = '../data/WELL' + (index + 1) + '.OUT'
+          
+          if (fs.existsSync(path.join(__dirname, fileName))) {
+            let content = fs.readFileSync(path.join(__dirname, fileName))
+            let lines = content.toString().split("\r\n")
+  
+            result['WELL' + (index+1)] = content.toString()
+            result['RES_WELL' + (index+1)] = []
+  
+            for (let i = 5; i < lines.length; i++) {
+              var a = lines[i].split(" ")
+              let oneline = a.filter(value => { if (value != '') return true})
+              if (oneline.length > 0)
+                result['RES_WELL' + (index+1)].push(oneline)
+            }
+          }  
+        }
+
+        // Parse PRESSURE_MATCHING.OUT
+        if (fs.existsSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))) {
+          let content = fs.readFileSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))
+          let lines = content.toString().split("\r\n")
+
+          result.PRESSURE_MATCHING = content.toString()
+          result.RES_PRESSURE_MATCHING = []
+
+          for (let i = 3; i < lines.length; i++) {
+            var a = lines[i].split(" ")
+            let oneline = a.filter(value => { if (value != '') return true})
+            if (oneline.length > 0)
+              result.RES_PRESSURE_MATCHING.push(oneline)              
+          }
+        }
+
+        event.returnValue = result
+      }
+      catch (err) {
+        // throw err;
+        console.log(JSON.stringify(err))
+        event.returnValue = {}
+      }
+    });
+
+    ipcMain.on('runGasCondensate', async (event, payload) => {
+      try {
+        removeUnnecessaries()
+
+        //
+        // create contents
+        // 
+        let content =  {
+          fastplan: {
+            isFDP: payload.isFDP, 
+            isCondensate: payload.isCondensate,
+            isEconomics: payload.isEconomics,
+            isSeparatorOptimizer: payload.isSeparatorOptimizer
+          },
+          drygas: payload.drygas,
+          surface: payload.surface,
+          reservoir: payload.reservoir,
+          economics: payload.economics,
+          operations: payload.operations,
+          gascondensate: payload.gascondensate,
+          resKGKO: payload.resKGKO
+        }
+
+        console.log("RunGasCondensate: " + JSON.stringify(content))
+
+        createFastPlan(content.fastplan)
+        createDryGas(content.drygas)
+        createGasCondensate(content.gascondensate)
+        createKRSG(content.resKGKO)
+        createSurface(content.surface)
+        createReservoir(content.reservoir)
+        if (content.fastplan.isEconomics == true) {
+          createEconomics(content.economics)
+        }
+        createOperations(content.operations)
+
+        // launch ConsoleApplicationFDPHIST.exe
+        let command = path.resolve(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'))
+        console.log('command: ' + command)
+        let appResult = require('child_process').execSync(
+          command,
+          {
+            cwd: path.resolve(path.join(__dirname, '../data/')),
+            stdio: 'inherit'
+          }
+        );
+
+        // -----------------------------
+        // get the result
+        // 
+
+        // Parse PLOT_OF.OUT file
+        let result = {}
+
+        if (fs.existsSync(path.join(__dirname, '../data/PLOT_OF.OUT'))) {
+          let content = fs.readFileSync(path.join(__dirname, '../data/PLOT_OF.OUT'))
+          let lines = content.toString().split("\r\n")
+
+          result.PLOT_OF = content.toString()
+          result.RES_PLOT_OF = []
+
+          for (let i = 3; i < lines.length; i++) {
+            var a = lines[i].split(" ")
+            let oneline = a.filter(value => { if (value != '') return true})
+            if (oneline.length > 0)
+              result.RES_PLOT_OF.push(oneline)              
+          }
+        }
+
+        if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.OUT'))) {
+          let content = fs.readFileSync(path.join(__dirname, '../data/ECONOMICS.OUT'))
+          let lines = content.toString().split("\r\n")
+
+          result.ECONOMICS = content.toString()
+          result.RES_ECONOMICS = []
+
+          for (let i = 2; i < lines.length; i++) {
+            var a = lines[i].split(" ")
+            let oneline = a.filter(value => { if (value != '') return true})
+            if (oneline.length > 0)
+              result.RES_ECONOMICS.push(oneline)              
+          }
+        }
+
+        if (fs.existsSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))) {
+          let content = fs.readFileSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))
+          result.RESULT_OF = content.toString()
+        }
+
+        event.returnValue = result
+      }
+      catch (err) {
+        // throw err;
+        event.returnValue = {}
+      }
+    });
 
   }
 
