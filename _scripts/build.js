@@ -16,8 +16,8 @@ if (platform == 'darwin') {
 }
 
 const config = {
-  appId: `com.mubaidr.${name}`,
-  copyright: 'Copyright ©2019 mubaidr@gmail.com',
+  appId: `com.gfex.fastplan`,
+  copyright: 'Copyright ©2021 fonzmg@gmail.com',
   // asar: false,
   // compression: 'store',
   productName,

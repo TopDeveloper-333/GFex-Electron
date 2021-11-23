@@ -1,7 +1,7 @@
 {
-  "author": "Muhammad Ubaid Raza <mubaidr@gmail.com>",
+  "author": "Denis Sklyarenko <sklyara01@mail.ru>",
   "bugs": {
-    "url": "https://github.com/mubaidr/vue-electron-template/issues"
+    "url": "https://github.com/TopDeveloper-333/GFex-Electron"
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
@@ -96,7 +96,7 @@
   "productName": "GFeX",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mubaidr/vue-electron-template.git"
+    "url": "git+https://github.com/TopDeveloper-333/GFex-Electron.git"
   },
   "build" : {
     "appId": "com.gfex.fastplan",
