@@ -460,6 +460,8 @@ export function DBinitialize() {
     // List Projects
     //
     ipcMain.on('listProjects', async (event, ...args) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         let projectList = await projectRepo.find();
         let result = []
@@ -471,8 +473,15 @@ export function DBinitialize() {
         console.log(result)
         event.returnValue = result
 
-      } catch (err) {
-        throw err;
+      } 
+      catch (err) {
+        
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "listProjects: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 
@@ -480,6 +489,8 @@ export function DBinitialize() {
     // Create new project
     //
     ipcMain.on('createProject', async (event, projectName) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         const project = await projectRepo.create();
         project.project_name = projectName
@@ -488,8 +499,14 @@ export function DBinitialize() {
 
         await projectRepo.save(project);
         event.returnValue = await projectRepo.findOne(project.id);
-      } catch (err) {
-        throw err;
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "createProject: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = {}
       }
     });
   
@@ -497,14 +514,24 @@ export function DBinitialize() {
     // Open existing project
     //
     ipcMain.on('openProject', async (event, projectId) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         event.returnValue = await projectRepo.findOne(projectId);
-      } catch (err) {
-        throw err;
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "openProject: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = {}
       }
     });
 
     ipcMain.on('saveProject', async (event, _project) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         let project = {}
 
@@ -539,18 +566,32 @@ export function DBinitialize() {
 
         await projectRepo.save(project);
         event.returnValue = await projectRepo.findOne(project.id);
-      } catch (err) {
-        throw err;
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "saveProject: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
   
     ipcMain.on('deleteProject', async (event, _project) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         const project = await projectRepo.create(_project);
         await projectRepo.remove(project);
         event.returnValue = await projectRepo.find();
-      } catch (err) {
-        throw err;
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "deleteProject: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 
@@ -587,15 +628,24 @@ export function DBinitialize() {
         }
 
         // launch COREY_FUNCTION.exe
-        let command = path.join(userDataPath, '/data/COREY_FUNCTION.exe')
+        let command = '"' +  path.join(userDataPath, '/data/COREY_FUNCTION.exe') + '"'
         console.log('command: ' + command)
-        require('child_process').execSync(
+        let appLog = require('child_process').execSync(
           command,
           {
             cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "requestKGKO: " + command + "\n")
+        if (appLog == null || appLog == undefined)
+          fs.appendFileSync(logFile, "Succeeded")
+        else
+          fs.appendFileSync(logFile, appLog.toString())
+
 
         // get the result
         if (fs.existsSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))) {
@@ -616,7 +666,12 @@ export function DBinitialize() {
         }
       }
       catch (err) {
-        throw err;
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "requestKGKO: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 
@@ -785,15 +840,23 @@ export function DBinitialize() {
         }
 
         // launch SEPOPT.exe
-        let command = path.resolve(path.join(userDataPath, '/data/SEPOPT.exe'))
+        let command = '"' + path.resolve(path.join(userDataPath, '/data/SEPOPT.exe')) + '"'
         console.log('command: ' + command)
-        require('child_process').execSync(
+        let appLog = require('child_process').execSync(
           command,
           {
             cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "requestOPT: " + command + "\n")
+        if (appLog == null || appLog == undefined)
+          fs.appendFileSync(logFile, "Succeeded")
+        else
+          fs.appendFileSync(logFile, appLog.toString())
 
         // get the result : OPT.OUT
         if (fs.existsSync(path.join(userDataPath, '/data/OPT.OUT'))) {
@@ -814,7 +877,13 @@ export function DBinitialize() {
         }
       }
       catch (err) {
-        throw err;
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "requestOPT: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 
@@ -863,15 +932,23 @@ export function DBinitialize() {
         }
 
         // launch BLACKOIL.exe
-        let command = path.resolve(path.join(userDataPath, '/data/BLACKOIL.exe'))
+        let command = '"' + path.resolve(path.join(userDataPath, '/data/BLACKOIL.exe')) + '"'
         console.log('command: ' + command)
-        require('child_process').execSync(
+        let appLog = require('child_process').execSync(
           command,
           {
             cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "requestCvdOut: " + command + "\n")
+        if (appLog == null || appLog == undefined)
+          fs.appendFileSync(logFile, "Succeeded")
+        else
+          fs.appendFileSync(logFile, appLog.toString())
 
         // get the result
         if (fs.existsSync(path.join(userDataPath, '/data/CVD.OUT'))) {
@@ -892,7 +969,12 @@ export function DBinitialize() {
         }
       }
       catch (err) {
-        throw err;
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "requestCvdOut: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 
@@ -1260,15 +1342,23 @@ export function DBinitialize() {
         }
 
         // launch ConsoleApplicationFDPHIST.exe
-        let command = path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+        let command = '"' + path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe')) + '"'
         console.log('command: ' + command)
-        require('child_process').execSync(
+        let appLog = require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(userDataPath, '/data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')) ,
             stdio: 'inherit'
           }
         );
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runDryGas: " + command + "\n")
+        if (appLog == null || appLog == undefined)
+          fs.appendFileSync(logFile, "Succeeded")
+        else
+          fs.appendFileSync(logFile, appLog.toString())
 
         // -----------------------------
         // get the result        
@@ -1315,7 +1405,11 @@ export function DBinitialize() {
         event.returnValue = result
       }
       catch (err) {
-        // throw err;
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runDryGas: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
         event.returnValue = {}
       }
     });
@@ -1365,15 +1459,23 @@ export function DBinitialize() {
         }
 
         // launch ConsoleApplicationFDPHIST.exe
-        let command = path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+        let command = '"' + path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe')) + '"'
         console.log('command: ' + command)
-        let appResult = require('child_process').execSync(
+        let appLog = require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(userDataPath, '/data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')) ,
             stdio: 'inherit'
           }
         );
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runMonitoring: " + command + "\n")
+        if (appLog == null || appLog == undefined)
+          fs.appendFileSync(logFile, "Succeeded")
+        else
+          fs.appendFileSync(logFile, appLog.toString())
 
         // -----------------------------
         // get the result        
@@ -1422,9 +1524,12 @@ export function DBinitialize() {
         event.returnValue = result
       }
       catch (err) {
-        // throw err;
-        console.log(JSON.stringify(err))
-        event.returnValue = {}
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runMonitoring: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 
@@ -1479,15 +1584,23 @@ export function DBinitialize() {
         }
 
         // launch ConsoleApplicationFDPHIST.exe
-        let command = path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+        let command = '"' + path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe')) + '"'
         console.log('command: ' + command)
-        let appResult = require('child_process').execSync(
+        let appLog = require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(userDataPath, '/data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')) ,
             stdio: 'inherit'
           }
         );
+
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runGasCondensate: " + command + "\n")
+        if (appLog == null || appLog == undefined)
+          fs.appendFileSync(logFile, "Succeeded")
+        else
+          fs.appendFileSync(logFile, appLog.toString())
 
         // -----------------------------
         // get the result
@@ -1534,8 +1647,12 @@ export function DBinitialize() {
         event.returnValue = result
       }
       catch (err) {
-        // throw err;
-        event.returnValue = {}
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runGasCondensate: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
       }
     });
 

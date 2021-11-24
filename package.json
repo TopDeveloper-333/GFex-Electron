@@ -91,9 +91,9 @@
   },
   "license": "MIT",
   "main": "./dist/main.js",
-  "name": "gfex",
+  "name": "fastplan",
   "private": true,
-  "productName": "GFeX",
+  "productName": "FastPlan",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TopDeveloper-333/GFex-Electron.git"
@@ -128,5 +128,5 @@
     "test": "run-s rebuild:node pack:workers jest",
     "test:watch": "run-s rebuild:node pack:workers jest:watch"
   },
-  "version": "0.0.1"
+  "version": "0.0.4"
 }
