@@ -5,19 +5,28 @@ import { Project } from '../db/project.schema'
 
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
+
+import { app, dialog } from 'electron'
 
 export function DBinitialize() {
   console.log('ProjectDB is initialized')
+  const isDev = process.env.NODE_ENV === 'development'
 
   const runConnection = async() => {
-    console.log('Start to create connection')
+    const userDataPath = app.getPath('userData')
+
+    console.log('Start to create connection: ' + userDataPath)
+
+    //
+    // create temporary file
 
     let connection = await createConnection({
       type: 'sqlite',
       synchronize: true,
       logging: true,
       logger: 'simple-console',
-      database: './src/db/sqlite.db',
+      database: path.join(userDataPath, '/fastplan.db'),
       entities: [ Project ],
     })
 
@@ -93,352 +102,357 @@ export function DBinitialize() {
     }
 
     let removeUnnecessaries = function () {
-      if (fs.existsSync(path.join(__dirname, '../data/SEP.IN'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/SEP.IN'))
+      const userDataPath = app.getPath('userData')
+
+      if (!fs.existsSync(path.join(userDataPath, "/data")))
+        fs.mkdirSync(path.join(userDataPath, "/data"))
+
+      if (fs.existsSync(path.join(userDataPath, '/data/SEP.IN'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/SEP.IN'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/ECONOMICS.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/FASTPLAN.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/FASTPLAN.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/FASTPLAN.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/FASTPLAN.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/GAS_PVT.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/GAS_PVT.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/GAS_PVT.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/GAS_PVT.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/KRSG.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/KRSG.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/KRSG.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/KRSG.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/OPERATIONS.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/OPERATIONS.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/OPERATIONS.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/OPERATIONS.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PCGR.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PCGR.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PCGR.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PCGR.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PGOR.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PGOR.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PGOR.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PGOR.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PINE.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PINE.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PINE.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PINE.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PKRG.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PKRG.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PKRG.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PKRG.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PKRO.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PKRO.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PKRO.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PKRO.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PMAT.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PMAT.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PMAT.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PMAT.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PZ.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PZ.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PZ.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PZ.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PZED.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PZED.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PZED.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PZED.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR_MON.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR_MON.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR_MON.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR_MON.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/SURFACE.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/SURFACE.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/SURFACE.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/SURFACE.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/WELL_HISTORY.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/WELL_HISTORY.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/WELL_HISTORY.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/WELL_HISTORY.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.DAT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.DAT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.DAT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.DAT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/COREY_DATA.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/COREY_DATA.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/COREY_DATA.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/COREY_DATA.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/ECONOMICS.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/FASTPLAN.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/FASTPLAN.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/FASTPLAN.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/FASTPLAN.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/GAS_PVT.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/GAS_PVT.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/GAS_PVT.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/GAS_PVT.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/KRSG.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/KRSG.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/KRSG.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/KRSG.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/OPERATIONS.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/OPERATIONS.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/OPERATIONS.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/OPERATIONS.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PINE.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PINE.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PINE.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PINE.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PZED.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PZED.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PZED.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PZED.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR_MON.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR_MON.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR_MON.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR_MON.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/SURFACE.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/SURFACE.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/SURFACE.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/SURFACE.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/WELL_HISTORY.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/WELL_HISTORY.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/WELL_HISTORY.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/WELL_HISTORY.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.NEW'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.NEW'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.NEW'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.NEW'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/EARNING.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/EARNING.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/EARNING.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/EARNING.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/KGKO_COREY.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/KGKO_COREY.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/MATPLOT.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/MATPLOT.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/MATPLOT.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/MATPLOT.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PINE.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PINE.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PINE.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PINE.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PLOT_OF.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PLOT_OF.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PLOT_SI.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PLOT_SI.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PLOT_SI.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PLOT_SI.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PRESSURE_MATCHING.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PRESSURE_MATCHING.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESULTS_SI.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESULTS_SI.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESULTS_SI.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESULTS_SI.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/ECONOMICS.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/FASTPLAN.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/FASTPLAN.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/FASTPLAN.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/FASTPLAN.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/GAS_PVT.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/GAS_PVT.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/GAS_PVT.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/GAS_PVT.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/KRSG.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/KRSG.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/KRSG.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/KRSG.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/OPERATIONS.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/OPERATIONS.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/OPERATIONS.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/OPERATIONS.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PCGR.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PCGR.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PCGR.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PCGR.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PGOR.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PGOR.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PGOR.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PGOR.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PINE.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PINE.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PINE.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PINE.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PKRG.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PKRG.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PKRG.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PKRG.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PKRO.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PKRO.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PKRO.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PKRO.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PMAT.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PMAT.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PMAT.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PMAT.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PZ.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PZ.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PZ.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PZ.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PZED.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PZED.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PZED.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PZED.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR_MON.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR_MON.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR_MON.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR_MON.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/SURFACE.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/SURFACE.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/SURFACE.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/SURFACE.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/WELL_HISTORY.BAK'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/WELL_HISTORY.BAK'))
+      if (fs.existsSync(path.join(userDataPath, '/data/WELL_HISTORY.BAK'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/WELL_HISTORY.BAK'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.DAT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.DAT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.DAT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.DAT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/COREY_DATA.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/COREY_DATA.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/COREY_DATA.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/COREY_DATA.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/ECONOMICS.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/FASTPLAN.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/FASTPLAN.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/FASTPLAN.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/FASTPLAN.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/GAS_PVT.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/GAS_PVT.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/GAS_PVT.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/GAS_PVT.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/KRSG.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/KRSG.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/KRSG.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/KRSG.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/OPERATIONS.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/OPERATIONS.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/OPERATIONS.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/OPERATIONS.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PINE.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PINE.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PINE.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PINE.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PZED.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PZED.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PZED.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PZED.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESERVOIR_MON.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESERVOIR_MON.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESERVOIR_MON.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESERVOIR_MON.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/SURFACE.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/SURFACE.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/SURFACE.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/SURFACE.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/WELL_HISTORY.in'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/WELL_HISTORY.in'))
+      if (fs.existsSync(path.join(userDataPath, '/data/WELL_HISTORY.in'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/WELL_HISTORY.in'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.NEW'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.NEW'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.NEW'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.NEW'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/CVD.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/CVD.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/CVD.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/CVD.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/EARNING.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/EARNING.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/EARNING.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/EARNING.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/ECONOMICS.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/KGKO_COREY.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/KGKO_COREY.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/MATPLOT.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/MATPLOT.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/MATPLOT.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/MATPLOT.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PINE.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PINE.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PINE.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PINE.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PLOT_OF.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PLOT_OF.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PLOT_SI.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PLOT_SI.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PLOT_SI.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PLOT_SI.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/PRESSURE_MATCHING.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/PRESSURE_MATCHING.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))
       }
 
-      if (fs.existsSync(path.join(__dirname, '../data/RESULTS_SI.OUT'))) {
-        fs.unlinkSync(path.join(__dirname, '../data/RESULTS_SI.OUT'))
+      if (fs.existsSync(path.join(userDataPath, '/data/RESULTS_SI.OUT'))) {
+        fs.unlinkSync(path.join(userDataPath, '/data/RESULTS_SI.OUT'))
       }
     }
 
@@ -541,6 +555,8 @@ export function DBinitialize() {
     });
 
     ipcMain.on('requestKGKO', async (event, _corey) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         removeUnnecessaries()
 
@@ -555,23 +571,35 @@ export function DBinitialize() {
         contents = contents + _corey.lambda + "\n"
 
         // add content to file
-        let filePath = path.join(__dirname, '../data/COREY_DATA.in')
+        let filePath = path.join(userDataPath, '/data/COREY_DATA.in')
         fs.appendFileSync(filePath, contents)
 
+        // copy COREY_FUNCTOIN.exe into data directory
+        if (!fs.existsSync(path.join(userDataPath, '/data/COREY_FUNCTION.exe'))) {
+          if (isDev) {
+            fs.copyFileSync(path.join(__dirname, '../data/COREY_FUNCTION.exe'),
+                        path.join(userDataPath, '/data/COREY_FUNCTION.exe'))
+          }
+          else {
+            fs.copyFileSync(path.join(__dirname, '../dist/data/COREY_FUNCTION.exe'),
+                        path.join(userDataPath, '/data/COREY_FUNCTION.exe'))
+          }
+        }
+
         // launch COREY_FUNCTION.exe
-        let command = path.resolve(path.join(__dirname, '../data/COREY_FUNCTION.exe'))
+        let command = path.join(userDataPath, '/data/COREY_FUNCTION.exe')
         console.log('command: ' + command)
         require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(__dirname, '../data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
 
         // get the result
-        if (fs.existsSync(path.join(__dirname, '../data/KGKO_COREY.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/KGKO_COREY.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/KGKO_COREY.OUT'))
           let lines = content.toString().split("\r\n")
 
           var result = []
@@ -594,6 +622,8 @@ export function DBinitialize() {
 
 
     ipcMain.on('requestOPT', async (event, sep) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         removeUnnecessaries()
 
@@ -737,23 +767,37 @@ export function DBinitialize() {
         }
 
         // add content to file
-        let filePath = path.join(__dirname, '../data/SEP.in')
+        let filePath = path.join(userDataPath, '/data/SEP.in')
         fs.appendFileSync(filePath, contents)
 
+        // copy SEPOPT.exe into data directory
+        if (!fs.existsSync(path.join(userDataPath, '/data/SEPOPT.exe'))) {
+          
+          if (isDev) {
+            fs.copyFileSync(path.join(__dirname, '../data/SEPOPT.exe'),
+            path.join(userDataPath, '/data/SEPOPT.exe'))
+          }
+          else {
+            fs.copyFileSync(path.join(__dirname, '../dist/data/SEPOPT.exe'),
+            path.join(userDataPath, '/data/SEPOPT.exe'))
+          }
+
+        }
+
         // launch SEPOPT.exe
-        let command = path.resolve(path.join(__dirname, '../data/SEPOPT.exe'))
+        let command = path.resolve(path.join(userDataPath, '/data/SEPOPT.exe'))
         console.log('command: ' + command)
         require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(__dirname, '../data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
 
         // get the result : OPT.OUT
-        if (fs.existsSync(path.join(__dirname, '../data/OPT.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/OPT.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/OPT.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/OPT.OUT'))
           let lines = content.toString().split("\r\n")
 
           var result = []
@@ -775,6 +819,8 @@ export function DBinitialize() {
     });
 
     ipcMain.on('requestCvdOut', async (event, cvd) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         removeUnnecessaries()
 
@@ -801,23 +847,35 @@ export function DBinitialize() {
         }) 
 
         // add content to file
-        let filePath = path.join(__dirname, '../data/CVD.in')
+        let filePath = path.join(userDataPath, '/data/CVD.in')
         fs.appendFileSync(filePath, contents)
 
+        // copy BLACKOIL.exe into data directory
+        if (!fs.existsSync(path.join(userDataPath, '/data/BLACKOIL.exe'))) {
+          if (isDev) {
+            fs.copyFileSync(path.join(__dirname, '../data/BLACKOIL.exe'),
+            path.join(userDataPath, '/data/BLACKOIL.exe'))
+          }
+          else {
+            fs.copyFileSync(path.join(__dirname, '../dist/data/BLACKOIL.exe'),
+            path.join(userDataPath, '/data/BLACKOIL.exe'))
+          }
+        }
+
         // launch BLACKOIL.exe
-        let command = path.resolve(path.join(__dirname, '../data/BLACKOIL.exe'))
+        let command = path.resolve(path.join(userDataPath, '/data/BLACKOIL.exe'))
         console.log('command: ' + command)
         require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(__dirname, '../data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
 
         // get the result
-        if (fs.existsSync(path.join(__dirname, '../data/CVD.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/CVD.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/CVD.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/CVD.OUT'))
           let lines = content.toString().split("\r\n")
 
           var result = []
@@ -840,6 +898,8 @@ export function DBinitialize() {
 
 
     let createFastPlan = (fastPlan) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ""
 
       if (fastPlan.isFDP == 1)
@@ -861,11 +921,13 @@ export function DBinitialize() {
       
       contents = contents + '1' + '\n'
 
-      let filePath = path.join(__dirname, '../data/FASTPLAN.in')
+      let filePath = path.join(userDataPath, '/data/FASTPLAN.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createDryGas = (dryGas) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ""
 
       contents = contents + dryGas.standardConditions.Psc + ' '
@@ -883,11 +945,13 @@ export function DBinitialize() {
       contents = contents + dryGas.rockProperties.waterCompressibility + ' '
       contents = contents + dryGas.rockProperties.rockCompressibility + '\n'
 
-      let filePath = path.join(__dirname, '../data/GAS_PVT.in')
+      let filePath = path.join(userDataPath, '/data/GAS_PVT.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createGasCondensate = (gasCondensate) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ""
 
       contents = contents + gasCondensate.gasCondensate1.Psat + ' '
@@ -905,11 +969,13 @@ export function DBinitialize() {
       });
 
 
-      let filePath = path.join(__dirname, '../data/PINE.in')
+      let filePath = path.join(userDataPath, '/data/PINE.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createKRSG = (krsg) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       krsg.forEach(element => {
@@ -918,11 +984,13 @@ export function DBinitialize() {
         contents = contents + element[2] + '\n'
       })
 
-      let filePath = path.join(__dirname, '../data/KRSG.in')
+      let filePath = path.join(userDataPath, '/data/KRSG.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createSurface = (surface) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       contents = contents + surface.tubingProperties.Length + ' '
@@ -951,11 +1019,13 @@ export function DBinitialize() {
       contents = contents + surface.compressionToStart.CompressionDischargeRatio + ' '
       contents = contents + surface.compressionToStart.DELTA_P_MIN + '\n'
 
-      let filePath = path.join(__dirname, '../data/SURFACE.in')
+      let filePath = path.join(userDataPath, '/data/SURFACE.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createReservoir = (reservoir) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       contents = contents + reservoir.reservoirPVT.Viscosity + ' '
@@ -999,11 +1069,13 @@ export function DBinitialize() {
         contents = contents + reservoir.horizontalModel.KvKh + '\n'
       }
 
-      let filePath = path.join(__dirname, '../data/RESERVOIR.in')
+      let filePath = path.join(userDataPath, '/data/RESERVOIR.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createReservoirMon = (reservoir) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       contents = contents + reservoir.reservoirPVT.Viscosity + ' '
@@ -1023,11 +1095,13 @@ export function DBinitialize() {
         contents = contents + reservoir.dualPorosity.MatrixGIIP + '\n'
       }
 
-      let filePath = path.join(__dirname, '../data/RESERVOIR_MON.in')
+      let filePath = path.join(userDataPath, '/data/RESERVOIR_MON.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createEconomics = (economics) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       contents = contents + economics.economics1.PriceOfGas + ' '
@@ -1050,11 +1124,13 @@ export function DBinitialize() {
         contents = contents + element[2] + '\n'
       })
 
-      let filePath = path.join(__dirname, '../data/ECONOMICS.in')
+      let filePath = path.join(userDataPath, '/data/ECONOMICS.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createOperations = (operations) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       contents = contents + operations.operationalConstraints.StartOfOperations + ' '
@@ -1068,11 +1144,13 @@ export function DBinitialize() {
       contents = contents + operations.gasDeliveryRequirements.EconomicsRate + ' '
       contents = contents + operations.gasDeliveryRequirements.MaxFieldRecovery + '\n'
 
-      let filePath = path.join(__dirname, '../data/OPERATIONS.in')
+      let filePath = path.join(userDataPath, '/data/OPERATIONS.in')
       fs.appendFileSync(filePath, contents)
     }
 
     let createWellHistory = (wellhistory) => {
+      const userDataPath = app.getPath('userData')
+
       let contents = ''
 
       contents = contents + wellhistory.historyForecastRun.FirstYearOfProduction + ' ' 
@@ -1131,11 +1209,13 @@ export function DBinitialize() {
         }
       })
 
-      let filePath = path.join(__dirname, '../data/WELL_HISTORY.in')
+      let filePath = path.join(userDataPath, '/data/WELL_HISTORY.in')
       fs.appendFileSync(filePath, contents)
     }
 
     ipcMain.on('runDryGas', async (event, payload) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         removeUnnecessaries()
 
@@ -1167,13 +1247,25 @@ export function DBinitialize() {
         }
         createOperations(content.operations)
 
+        // copy ConsoleApplicationFDPHIST.exe into data directory
+        if (!fs.existsSync(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))) {
+          if (isDev) {
+            fs.copyFileSync(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'),
+            path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+          }
+          else {
+            fs.copyFileSync(path.join(__dirname, '../dist/data/ConsoleApplicationFDPHIST.exe'),
+            path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+          }
+        }
+
         // launch ConsoleApplicationFDPHIST.exe
-        let command = path.resolve(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'))
+        let command = path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
         console.log('command: ' + command)
         require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(__dirname, '../data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
@@ -1185,8 +1277,8 @@ export function DBinitialize() {
         // Parse PLOT_OF.OUT file
         let result = {}
 
-        if (fs.existsSync(path.join(__dirname, '../data/PLOT_OF.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/PLOT_OF.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))
           let lines = content.toString().split("\r\n")
 
           result.PLOT_OF = content.toString()
@@ -1200,8 +1292,8 @@ export function DBinitialize() {
           }
         }
 
-        if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/ECONOMICS.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))
           let lines = content.toString().split("\r\n")
 
           result.ECONOMICS = content.toString()
@@ -1215,8 +1307,8 @@ export function DBinitialize() {
           }
         }
 
-        if (fs.existsSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))
           result.RESULT_OF = content.toString()
         }
 
@@ -1229,6 +1321,8 @@ export function DBinitialize() {
     });
 
     ipcMain.on('runMonitoring', async (event, payload) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         removeUnnecessaries()
 
@@ -1258,13 +1352,25 @@ export function DBinitialize() {
         createReservoirMon(content.reservoir)
         createWellHistory(content.wellhistory)
 
+        // copy ConsoleApplicationFDPHIST.exe into data directory
+        if (!fs.existsSync(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))) {
+          if (isDev) {
+            fs.copyFileSync(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'),
+            path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+          }
+          else {
+            fs.copyFileSync(path.join(__dirname, '../dist/data/ConsoleApplicationFDPHIST.exe'),
+            path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+          }
+        }
+
         // launch ConsoleApplicationFDPHIST.exe
-        let command = path.resolve(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'))
+        let command = path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
         console.log('command: ' + command)
         let appResult = require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(__dirname, '../data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
@@ -1279,10 +1385,10 @@ export function DBinitialize() {
         console.log('NumberOfWells : ' + result.NumberOfWells)
 
         for (let index = 0; index < result.NumberOfWells; index++) {
-          const fileName = '../data/WELL' + (index + 1) + '.OUT'
+          const fileName = '/data/WELL' + (index + 1) + '.OUT'
           
-          if (fs.existsSync(path.join(__dirname, fileName))) {
-            let content = fs.readFileSync(path.join(__dirname, fileName))
+          if (fs.existsSync(path.join(userDataPath, fileName))) {
+            let content = fs.readFileSync(path.join(userDataPath, fileName))
             let lines = content.toString().split("\r\n")
   
             result['WELL' + (index+1)] = content.toString()
@@ -1298,8 +1404,8 @@ export function DBinitialize() {
         }
 
         // Parse PRESSURE_MATCHING.OUT
-        if (fs.existsSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/PRESSURE_MATCHING.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/PRESSURE_MATCHING.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/PRESSURE_MATCHING.OUT'))
           let lines = content.toString().split("\r\n")
 
           result.PRESSURE_MATCHING = content.toString()
@@ -1323,6 +1429,8 @@ export function DBinitialize() {
     });
 
     ipcMain.on('runGasCondensate', async (event, payload) => {
+      const userDataPath = app.getPath('userData')
+
       try {
         removeUnnecessaries()
 
@@ -1358,13 +1466,25 @@ export function DBinitialize() {
         }
         createOperations(content.operations)
 
+        // copy ConsoleApplicationFDPHIST.exe into data directory
+        if (!fs.existsSync(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))) {
+          if (isDev) {
+            fs.copyFileSync(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'),
+            path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+          }
+          else {
+            fs.copyFileSync(path.join(__dirname, '../dist/data/ConsoleApplicationFDPHIST.exe'),
+            path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
+          }
+        }
+
         // launch ConsoleApplicationFDPHIST.exe
-        let command = path.resolve(path.join(__dirname, '../data/ConsoleApplicationFDPHIST.exe'))
+        let command = path.resolve(path.join(userDataPath, '/data/ConsoleApplicationFDPHIST.exe'))
         console.log('command: ' + command)
         let appResult = require('child_process').execSync(
           command,
           {
-            cwd: path.resolve(path.join(__dirname, '../data/')),
+            cwd: path.resolve(path.join(userDataPath, '/data/')),
             stdio: 'inherit'
           }
         );
@@ -1376,8 +1496,8 @@ export function DBinitialize() {
         // Parse PLOT_OF.OUT file
         let result = {}
 
-        if (fs.existsSync(path.join(__dirname, '../data/PLOT_OF.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/PLOT_OF.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/PLOT_OF.OUT'))
           let lines = content.toString().split("\r\n")
 
           result.PLOT_OF = content.toString()
@@ -1391,8 +1511,8 @@ export function DBinitialize() {
           }
         }
 
-        if (fs.existsSync(path.join(__dirname, '../data/ECONOMICS.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/ECONOMICS.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/ECONOMICS.OUT'))
           let lines = content.toString().split("\r\n")
 
           result.ECONOMICS = content.toString()
@@ -1406,8 +1526,8 @@ export function DBinitialize() {
           }
         }
 
-        if (fs.existsSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))) {
-          let content = fs.readFileSync(path.join(__dirname, '../data/RESULTS_OF.OUT'))
+        if (fs.existsSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))) {
+          let content = fs.readFileSync(path.join(userDataPath, '/data/RESULTS_OF.OUT'))
           result.RESULT_OF = content.toString()
         }
 
