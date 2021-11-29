@@ -26,7 +26,9 @@
 
         <img class="titleImage" src="/assets/image/LOGO_GFEX.png" width="450" height="450">
 
-        <p style="font-size:1.5rem !important;font-weight:600;color:#4172c4">GFeX, LLC<br/>
+        <p style="font-size:1.5rem !important;font-weight:600;color:#4172c4;margin-top:-20px">gfex@gfex-us.com</p>
+        <p style="font-size:1.5rem !important;font-weight:600;color:#4172c4;margin-bottom:0px">GFeX, LLC</p>
+        <p style="font-size:1rem !important;font-weight:600;color:#4172c4">
         7302 Timberlake Dr<br/>
         Suga Land, Texas 77479<br/>
         USA<br/>

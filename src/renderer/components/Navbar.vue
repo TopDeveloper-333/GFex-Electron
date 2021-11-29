@@ -1,9 +1,13 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div>
+    <router-link :to="{ name: 'home' }" class="nav-link gf-nav-item" style="float:right;color:#636b6f" active-class="active">
+      Home
+    </router-link>
+  </div>
+  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container">
       <router-link :to="'home'" class="navbar-brand" style="font-size:2rem">
-        <img class="titleImage" src="../assets/image/LOGO_GFEX.png" width="50" height="50">
-        GFeX
+        <img class="titleImage" src="../assets/image/LOGO_GFEX.png" width="50" height="50">GFeX
       </router-link>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
@@ -20,7 +24,7 @@
         </ul>
       </div>
     </div>
-  </nav>
+  </nav> -->
 </template>
 
 <script>

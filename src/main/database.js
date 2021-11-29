@@ -642,7 +642,7 @@ export function DBinitialize() {
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "requestKGKO: " + command + "\n")
         if (appLog == null || appLog == undefined)
-          fs.appendFileSync(logFile, "Succeeded")
+          fs.appendFileSync(logFile, "Succeeded\n")
         else
           fs.appendFileSync(logFile, appLog.toString())
 
@@ -854,7 +854,7 @@ export function DBinitialize() {
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "requestOPT: " + command + "\n")
         if (appLog == null || appLog == undefined)
-          fs.appendFileSync(logFile, "Succeeded")
+          fs.appendFileSync(logFile, "Succeeded\n")
         else
           fs.appendFileSync(logFile, appLog.toString())
 
@@ -946,7 +946,7 @@ export function DBinitialize() {
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "requestCvdOut: " + command + "\n")
         if (appLog == null || appLog == undefined)
-          fs.appendFileSync(logFile, "Succeeded")
+          fs.appendFileSync(logFile, "Succeeded\n")
         else
           fs.appendFileSync(logFile, appLog.toString())
 
@@ -1012,21 +1012,24 @@ export function DBinitialize() {
 
       let contents = ""
 
-      contents = contents + dryGas.standardConditions.Psc + ' '
-      contents = contents + dryGas.standardConditions.Tsc + '\n'
+      if (dryGas.standardConditions.Psc != undefined)
+      {
+        contents = contents + dryGas.standardConditions.Psc + ' '
+        contents = contents + dryGas.standardConditions.Tsc + '\n'
 
-      contents = contents + dryGas.gasProperties.gasCompressibility + ' '
-      contents = contents + dryGas.gasProperties.gasViscosity + ' '
-      contents = contents + dryGas.gasProperties.specificGravity + ' '
-      contents = contents + dryGas.gasProperties.resTemp + ' '
-      contents = contents + dryGas.gasProperties.N2 + ' '
-      contents = contents + dryGas.gasProperties.CO2 + ' '
-      contents = contents + dryGas.gasProperties.H2S + '\n'
+        contents = contents + dryGas.gasProperties.gasCompressibility + ' '
+        contents = contents + dryGas.gasProperties.gasViscosity + ' '
+        contents = contents + dryGas.gasProperties.specificGravity + ' '
+        contents = contents + dryGas.gasProperties.resTemp + ' '
+        contents = contents + dryGas.gasProperties.N2 + ' '
+        contents = contents + dryGas.gasProperties.CO2 + ' '
+        contents = contents + dryGas.gasProperties.H2S + '\n'
 
-      contents = contents + dryGas.rockProperties.conateWaterSaturation + ' '
-      contents = contents + dryGas.rockProperties.waterCompressibility + ' '
-      contents = contents + dryGas.rockProperties.rockCompressibility + '\n'
-
+        contents = contents + dryGas.rockProperties.conateWaterSaturation + ' '
+        contents = contents + dryGas.rockProperties.waterCompressibility + ' '
+        contents = contents + dryGas.rockProperties.rockCompressibility + '\n'
+      }
+      
       let filePath = path.join(userDataPath, '/data/GAS_PVT.in')
       fs.appendFileSync(filePath, contents)
     }
@@ -1356,7 +1359,7 @@ export function DBinitialize() {
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "runDryGas: " + command + "\n")
         if (appLog == null || appLog == undefined)
-          fs.appendFileSync(logFile, "Succeeded")
+          fs.appendFileSync(logFile, "Succeeded\n")
         else
           fs.appendFileSync(logFile, appLog.toString())
 
@@ -1473,7 +1476,7 @@ export function DBinitialize() {
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "runMonitoring: " + command + "\n")
         if (appLog == null || appLog == undefined)
-          fs.appendFileSync(logFile, "Succeeded")
+          fs.appendFileSync(logFile, "Succeeded\n")
         else
           fs.appendFileSync(logFile, appLog.toString())
 
@@ -1598,7 +1601,7 @@ export function DBinitialize() {
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "runGasCondensate: " + command + "\n")
         if (appLog == null || appLog == undefined)
-          fs.appendFileSync(logFile, "Succeeded")
+          fs.appendFileSync(logFile, "Succeeded\n")
         else
           fs.appendFileSync(logFile, appLog.toString())
 

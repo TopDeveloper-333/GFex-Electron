@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Dry Gas PVT Data</u></p>
+    <p v-show="currentRouteName == 'condensate'" class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Gas Properties</u></p>
+    <p v-show="currentRouteName == 'drygas'" class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Dry Gas PVT Data</u></p>
 
     <div style="display:flex;margin-bottom:6px;text-align:left" class="row">
       <p class="gf-item">Standard Conditions</p>
@@ -57,6 +58,9 @@ export default {
         return true;
 
       return this.isStandardConditionValidate & this.isGasPropertiesValidate & this.isRockPropertiesValidate
+    },
+    currentRouteName: function() {
+      return this.$route.name
     }
   },
 

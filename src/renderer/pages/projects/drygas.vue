@@ -45,7 +45,9 @@
               </operations>
 
               <div class="d-flex justify-content-between">
-                <label class="btn btn-primary gf-button " v-on:click="onPrevPage">Previous</label>
+                <div style="text-align:center">
+                  <label class="btn btn-primary gf-button " v-on:click="onPrevPage">Previous</label>
+                </div>
 
                 <!-- <div style="text-align:center" class="btn-group" role="group"> -->
                 <div style="text-align:center">
@@ -57,9 +59,10 @@
                   <label class="btn gf-button" v-on:click="onOperationPage" v-bind:class="operationButtonClass" v-show="isFDP=='1'">Operations</label>
                 </div>
 
-                <div>
+                <div style="text-align:center">
                   <label class="btn btn-outline-primary gf-button" v-bind:class="executeButtonClass" v-on:click="onNextPage">Execute</label>
-                  <label class="btn btn-primary gf-button " v-on:click="onExitPage">Exit</label>
+                  <label class="btn btn-primary gf-button" v-on:click="onExitPage(false)">Save</label>
+                  <label class="btn btn-primary gf-button" v-on:click="onExitPage(true)">Exit</label>
                 </div>
 
               </div>
@@ -83,7 +86,7 @@
           <input style="font-size: 1.25rem" maxlength="20" v-model="newProjectName" placeholder="Please input new project name">
         </div>
         <div style="margin-bottom:16px;margin-top:16px">
-          <label class="btn btn-primary gf-button" v-on:click="onSaveAs" v-show="hideSaveAsButton==false">Save As</label>
+          <label class="btn btn-primary gf-button" v-on:click="onSaveAs" v-show="hideSaveAsButton==false && isLeavePage == true">Save As</label>
           <label class="btn btn-primary gf-button" v-on:click="onYes">Yes</label>
           <label class="btn btn-primary gf-button" v-on:click="onNo">No</label>
         </div>
@@ -157,6 +160,7 @@ export default {
       isWellHistoryValidate: true,
       isEconomicsValidate: true,
       isOperationValidate: true,
+      isLeavePage: true
     }
   },
 
@@ -334,7 +338,8 @@ export default {
       this.isLoading = false
 
       // go to home vue
-      this.$router.replace('home')
+      if (this.isLeavePage == true)
+        this.$router.replace('home')
     },
     onNo: function(event) {
       // hide exit dialog
@@ -342,7 +347,8 @@ export default {
       modal.style.display = "none";
 
       // go to home vue
-      this.$router.replace('home')
+      if (this.isLeavePage == true)
+        this.$router.replace('home')
     },
     updateOptionButtonStatus: function(optionPage) {
     },
@@ -364,9 +370,10 @@ export default {
     onOperationPage: function(event) {
       this.screenType = OPERATIONS_SCREEN
     },
-    onExitPage: function(event) {
+    onExitPage: function(isLeave) {
       this.isSaveAs = false
       this.hideSaveAsButton = false
+      this.isLeavePage = isLeave
 
       var modal = document.getElementById("exitModal");
       modal.style.display = "block";
