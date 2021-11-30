@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, dialog } from 'electron'
+import { app, BrowserWindow, Menu, dialog, ipcMain } from 'electron'
 import pkg from '../../package.json'
 import { DBinitialize  } from './database'
 import { LicenseInitialize, GenerateMachineKey, VerifyLicenseKey, UploadLicenseKey } from './license'
@@ -152,23 +152,26 @@ const sendMenuEvent = async (data) => {
 const template = [
   {
     label: "License",
-    click() {
-      console.log(verifyInfo)
-
-      if (verifyInfo == undefined || verifyInfo.isVerified == false) {
-        doLicense()
-      }
-      else {
-        dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
-          title: 'License Information',
-          message: 'This application has licensed',
-          detail: 'From: ' + verifyInfo.from + ' To: ' + verifyInfo.to,
-          buttons: ['Ok']
-        })      
-      }
+    async click() {
+      await doLicense()
     }
   }
 ]
+
+ipcMain.on('getLicense', async (event, ...args) => { 
+  const today = new Date()
+  const from = Date.parse(verifyInfo.from)
+  const to = Date.parse(verifyInfo.to)
+
+  if (verifyInfo == undefined || verifyInfo.isVerified == false ||
+    today <= from || to <= today)
+  {
+    doLicense()    
+  }
+
+  event.returnValue = verifyInfo
+})
+
 
 function setMenu() {
   if (process.platform === 'darwin') {
@@ -185,6 +188,51 @@ function setMenu() {
 }
 
 async function doLicense() {
+  console.log(verifyInfo)
+
+  if (verifyInfo == undefined || verifyInfo.isVerified == false) {
+    updateLicense()
+  }
+  else {
+    const today = new Date()
+    const from = Date.parse(verifyInfo.from)
+    const to = Date.parse(verifyInfo.to)
+
+    let message = ''
+    if (from <= today && today <= to) 
+      message = 'This application has licensed'
+    else
+      message = 'The license is expired'
+
+    const res = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
+      title: 'License Information',
+      message: message,
+      detail: 'From: ' + verifyInfo.from + ' To: ' + verifyInfo.to,
+      buttons: ['Ok', 'Update new license']
+    })
+
+    if (res == 1) {
+      const response = dialog.showOpenDialogSync({
+        title: 'Update license',
+        defaultPath: app.getPath('downloads'),
+        buttonLabel: 'Select',
+        filters: [
+          {name: 'PEM files', extensions:['pem']},
+          {name: 'All Files', extensions:['*']}
+        ],
+        properties:['openFile'],
+        message: 'Select the licenseKey.pem file'
+      })
+  
+      if (response != undefined) {
+        await UploadLicenseKey(response + '')
+        verifyInfo = await VerifyLicenseKey()
+      }                
+    }
+  }
+}
+
+async function updateLicense() {
   const res = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
     title: 'License',
     message: 'Please update the license file.',

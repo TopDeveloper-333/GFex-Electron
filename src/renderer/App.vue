@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="main-layout">
-      <navbar v-show="currentRouteName == undefined" />
+      <navbar v-show="currentRouteName == undefined || currentRouteName == 'welcome' " />
       <div class="mt-2">
         <Transition mode="out-in" name="slide-up">
           <!-- <keep-alive> -->
@@ -27,6 +27,7 @@ export default Vue.extend({
 
   computed: {
     currentRouteName() {
+      debugger
       return this.$route.name
     }
   }

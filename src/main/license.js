@@ -4,7 +4,6 @@ import fs from 'fs'
 import path from 'path'
 import { app } from 'electron'
 
-
 export async function LicenseInitialize() {
   const verifyInfo = await VerifyLicenseKey()
   return verifyInfo
