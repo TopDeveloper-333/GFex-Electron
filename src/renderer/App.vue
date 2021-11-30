@@ -27,7 +27,6 @@ export default Vue.extend({
 
   computed: {
     currentRouteName() {
-      debugger
       return this.$route.name
     }
   }

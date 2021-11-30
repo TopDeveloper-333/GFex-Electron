@@ -15,9 +15,11 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.1.0",
     "bulma-fluent": "^0.4.3",
+    "crypto": "^1.0.1",
     "html2canvas": "^1.3.2",
     "js-cookie": "^2.2.1",
     "material-design-icons": "^3.0.1",
+    "node-machine-id": "^1.1.12",
     "save-svg-as-png": "^1.4.17",
     "sqlite3": "5.0.0",
     "sweetalert2": "^11.1.2",
@@ -102,7 +104,8 @@
   "build": {
     "appId": "com.gfex.fastplan",
     "extraFiles": [
-      "./data/*.exe"
+      "./data/*.exe",
+      "./data/pub.pem"
     ]
   },
   "scripts": {

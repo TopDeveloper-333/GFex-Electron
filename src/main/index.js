@@ -1,11 +1,13 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, dialog } from 'electron'
 import pkg from '../../package.json'
 import { DBinitialize  } from './database'
+import { LicenseInitialize, GenerateMachineKey, VerifyLicenseKey, UploadLicenseKey } from './license'
 
 require('@electron/remote/main').initialize()
 
 // set app name
 app.name = pkg.productName
+
 // to hide deprecation message
 app.allowRendererProcessReuse = true
 
@@ -16,6 +18,7 @@ const gotTheLock = app.requestSingleInstanceLock()
 const isDev = process.env.NODE_ENV === 'development'
 const isDebug = process.argv.includes('--debug')
 let mainWindow
+let verifyInfo
 
 // only allow single instance of application
 if (!isDev) {
@@ -46,7 +49,7 @@ async function installDevTools() {
   })
 }
 
-function createWindow() {
+async function createWindow() {
   /**
    * Initial window options
    */
@@ -68,6 +71,9 @@ function createWindow() {
 
   // create Project database
   DBinitialize()
+
+  // initialize license
+  verifyInfo = await LicenseInitialize()
 
   // eslint-disable-next-line
   setMenu()
@@ -144,74 +150,79 @@ const sendMenuEvent = async (data) => {
 }
 
 const template = [
-  // {
-  //   label: app.name,
-  //   submenu: [
-  //     {
-  //       label: 'Home',
-  //       accelerator: 'CommandOrControl+H',
-  //       click() {
-  //         sendMenuEvent({ route: '/' })
-  //       },
-  //     },
-  //     { type: 'separator' },
-  //     { role: 'minimize' },
-  //     { role: 'togglefullscreen' },
-  //     { type: 'separator' },
-  //     { role: 'quit', accelerator: 'Alt+F4' },
-  //   ],
-  // },
   {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Get Help',
-        role: 'help',
-        accelerator: 'F1',
-        click() {
-          sendMenuEvent({ route: '/help' })
-        },
-      },
-      {
-        label: 'About',
-        role: 'about',
-        accelerator: 'CommandOrControl+A',
-        click() {
-          sendMenuEvent({ route: '/about' })
-        },
-      },
-    ],
-  },
+    label: "License",
+    click() {
+      console.log(verifyInfo)
+
+      if (verifyInfo == undefined || verifyInfo.isVerified == false) {
+        doLicense()
+      }
+      else {
+        dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
+          title: 'License Information',
+          message: 'This application has licensed',
+          detail: 'From: ' + verifyInfo.from + ' To: ' + verifyInfo.to,
+          buttons: ['Ok']
+        })      
+      }
+    }
+  }
 ]
 
 function setMenu() {
   if (process.platform === 'darwin') {
-    // template.unshift({
-    //   label: app.name,
-    //   submenu: [
-    //     { role: 'about' },
-    //     { type: 'separator' },
-    //     { role: 'services' },
-    //     { type: 'separator' },
-    //     { role: 'hide' },
-    //     { role: 'hideothers' },
-    //     { role: 'unhide' },
-    //     { type: 'separator' },
-    //     { role: 'quit' },
-    //   ],
-    // })
 
     // template.push({
-    //   role: 'window',
+    //   role: 'Home',
     // })
 
-    template.push({
-      role: 'help',
-    })
-
-    template.push({ role: 'services' })
+    // template.push({ role: 'services' })
   }
 
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
+}
+
+async function doLicense() {
+  const res = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
+    title: 'License',
+    message: 'Please update the license file.',
+    detail: 'You can create machine key and then send it to the administrator. After then he will give you license file',
+    buttons: ['Generate machine key', 'Update license']
+  })
+
+  if (res == 0) {
+    const response = dialog.showSaveDialogSync({
+      title: 'Save machine key',
+      defaultPath: 'machineKey.pem',
+      buttonLabel: 'Save',
+      filters: [
+        { name: 'PEM files', extensions: ['pem']}
+      ],
+      message: 'Save the machineKey.pem'
+    })
+
+    if (response != undefined)
+      GenerateMachineKey(response)
+  }
+  else if (res == 1) {
+    const response = dialog.showOpenDialogSync({
+      title: 'Update license',
+      defaultPath: app.getPath('downloads'),
+      buttonLabel: 'Select',
+      filters: [
+        {name: 'PEM files', extensions:['pem']},
+        {name: 'All Files', extensions:['*']}
+      ],
+      properties:['openFile'],
+      message: 'Select the licenseKey.pem file'
+    })
+
+    if (response != undefined) {
+      await UploadLicenseKey(response + '')
+      verifyInfo = await VerifyLicenseKey()
+    }
+  }
+
 }
