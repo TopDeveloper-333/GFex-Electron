@@ -4,6 +4,8 @@ import fs from 'fs'
 import path from 'path'
 import { app } from 'electron'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 export async function LicenseInitialize() {
   const verifyInfo = await VerifyLicenseKey()
   return verifyInfo
@@ -92,6 +94,8 @@ export async function VerifyLicenseKey() {
     return { isVerified: false}
   }
 
+  console.log('Data : ' + data)
+  
   let contents = data.split(':')
   if (contents == undefined || contents.length != 4 || contents[0] != deviceFingerPrint) {
     return { isVerified: false}
@@ -102,7 +106,6 @@ export async function VerifyLicenseKey() {
 }
 
 export async function UploadLicenseKey(licenseKeyPath) {
-  const isDev = process.env.NODE_ENV === 'development'
   const userDataPath = app.getPath('userData')
 
   console.log('License Key Path : ' + licenseKeyPath)

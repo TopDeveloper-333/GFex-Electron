@@ -6,24 +6,27 @@
       <div class="col-3">
         <label class="typo__label gf-item">Axis X:</label>
         <multiselect v-model="axisX" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select X axis."></multiselect>
-        <label class="typo__label gf-item">Axis Y:</label>
-        <multiselect v-model="axisY" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y axis."></multiselect>
+        <label class="typo__label gf-item">Axes Y:</label>
+        <multiselect v-model="axisY" :multiple="true" :options="options" :close-on-select="false" :maxHeight="250" track-by="name" label="name" :taggable="true" placeholder="Select multiple Y axies."></multiselect>
         <label class="typo__label gf-item">Axis Y2:</label>
         <multiselect v-model="axisY2" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y2 axis."></multiselect>
 
         <div style="margin-top:32px;display:flex;text-align:left">
-            <input type="color" style="height:50px;margin-right:20px;" id="axisColor" name="axisColor" v-model="axisColor" @change="onApplyColor($event)">
+            <input type="color" style="min-width:50px;height:50px;margin-right:20px;" id="axisColor" name="axisColor" v-model="axisColor" @change="onApplyColor($event)">
             <label for="axisColor" class="typo__label gf-item">Axis Color</label>
         </div>
 
-        <div style="margin-top:32px;display:flex;text-align:left">
-            <input type="color" style="height:50px;margin-right:20px;" id="graphColor" name="graphColor" v-model="graphColor" @change="onApplyColor($event)">
-            <label for="graphColor" class="typo__label gf-item">Curve1 Color</label>
+        <div style="margin-top:32px;max-height:200px;overflow-y:scroll;overflow-x:hidden">
+            <div style="display:flex;text-align:left;margin-bottom:4px" v-for="entry in axisY" :key='entry.index'>
+              <input type="color" style="min-width:50px;height:50px;margin-right:20px;" :id="'graphColor' + entry.index" 
+                :name="'graphColor' + entry.index" v-model="graphColor[entry.index]" @change="onApplyColor($event)">
+              <label :for="'graphColor' + entry.index" class="typo__label gf-item">{{entry.name}}</label>
+            </div>
         </div>
 
-        <div style="margin-top:32px;display:flex;text-align:left">
-            <input type="color" style="height:50px;margin-right:20px;" id="graph1Color" name="graph1Color" v-model="graph1Color" @change="onApplyColor($event)">
-            <label for="graph1Color" class="typo__label gf-item">Curve2 Color</label>
+        <div style="margin-top:32px;display:flex;text-align:left" v-show="axisY2 != null && axisY2 != undefined">
+            <input type="color" style="min-width:50px;height:50px;margin-right:20px;" id="graph1Color" name="graph1Color" v-model="graph1Color" @change="onApplyColor($event)">
+            <label for="graph1Color" class="typo__label gf-item">{{axisY2 ? axisY2.name : 'Axis Y2 color'}}</label>
         </div>
 
       </div>
@@ -77,11 +80,10 @@ export default {
       axisY2: null,
       plot: null,
       axisColor: '#ffffff',
-      graphColor: '#ffbb78',
+      graphColor: [],
       graph1Color: '#b9ff78',
       isLoading: false,
       fullPage: true,
-      type: null,
     }
   },
 
@@ -91,6 +93,15 @@ export default {
       this.axisX = null
       this.axisY = null
       this.axisY2 = null
+    },
+    axisY: function (val, oldVal) {
+      debugger
+
+      if ((val.length == 1 && oldVal == null) || (val.length > oldVal.length)) {
+        let randomColor = Math.floor(Math.random()*16777215).toString(16);
+        let last = val[val.length - 1]
+        this.graphColor[last.index] = "#" + randomColor
+      }
     }
   },
 
@@ -102,9 +113,9 @@ export default {
 
   methods: {
     onApplyColor: function(event) {
-      document.documentElement.style.setProperty('--axis-color', this.axisColor);
-      document.documentElement.style.setProperty('--graph-color', this.graphColor);
-      document.documentElement.style.setProperty('--graph1-color', this.graph1Color);
+      // document.documentElement.style.setProperty('--axis-color', this.axisColor);
+      // document.documentElement.style.setProperty('--graph-color', this.graphColor);
+      // document.documentElement.style.setProperty('--graph1-color', this.graph1Color);
       this.onShow(null);
     },
     onShow: function(event) {
@@ -121,8 +132,8 @@ export default {
       // ----------------------------------------------------------
       // Initialize variables
       // ----------------------------------------------------------
-      document.documentElement.style.setProperty('--axis-color', this.axisColor);
-      document.documentElement.style.setProperty('--secondary-color', this.graphColor);
+      // document.documentElement.style.setProperty('--axis-color', this.axisColor);
+      // document.documentElement.style.setProperty('--secondary-color', this.graphColor);
 
       var axisX = this.axisX.name
       var columns = []
@@ -144,33 +155,78 @@ export default {
       }
 
       // ----------------------------------------------------------------
-      // add y data
-      columns[1] = []
-      columns[1][0] = this.axisX.name + " vs " + this.axisY.name
-      for (let index = 1; index <= numRows; index++) {
-        columns[1][index] = this.data[index-1][this.axisY.index]
+      // add y data : multiple axis Y
+      // ----------------------------------------------------------------
+      debugger
+      var maxY = 0
+      for (let i = 0; i < this.axisY.length; i++) {
+
+        columns[i+1] = []
+        columns[i+1][0] = this.axisY[i].name
+        for (let j = 1; j <= numRows; j++) {
+          columns[i+1][j] = this.data[j-1][this.axisY[i].index]
+
+          if (maxY < columns[i+1][j]) {
+            ylabel = this.axisY[i].name
+            maxY = columns[i+1][j]
+          }
+        }
       }
-      ylabel = this.axisY.name
 
       // ----------------------------------------------------------------
-      // add y2 data : removed axis Y2
+      // add y2 data : axis Y2
       // ----------------------------------------------------------------
       if (this.axisY2 != null) {
-        columns[2] = []
-        columns[2][0] = this.axisX.name + " vs " + this.axisY2.name
+        columns[this.axisY.length+1] = []
+        columns[this.axisY.length+1][0] = this.axisY2.name
         for (let j = 1; j <= numRows; j++) {
-          columns[2][j] = this.data[j-1][this.axisY2.index]
+          columns[this.axisY.length+1][j] = this.data[j-1][this.axisY2.index]
         }
 
-        axes[this.axisX.name + " vs " + this.axisY.name] = 'y'
-        axes[this.axisX.name + " vs " + this.axisY2.name] = 'y2'
+        axes[this.axisY2.name] = 'y2'
         ylabel2 = this.axisY2.name
       }
+
+
+      //
+      // Removed only one Y, Y2 axis
+      //
+
+      // // ----------------------------------------------------------------
+      // // add y data
+      // columns[1] = []
+      // columns[1][0] = this.axisX.name + " vs " + this.axisY.name
+      // for (let index = 1; index <= numRows; index++) {
+      //   columns[1][index] = this.data[index-1][this.axisY.index]
+      // }
+      // ylabel = this.axisY.name
+
+      // // ----------------------------------------------------------------
+      // // add y2 data : removed axis Y2
+      // // ----------------------------------------------------------------
+      // if (this.axisY2 != null) {
+      //   columns[2] = []
+      //   columns[2][0] = this.axisX.name + " vs " + this.axisY2.name
+      //   for (let j = 1; j <= numRows; j++) {
+      //     columns[2][j] = this.data[j-1][this.axisY2.index]
+      //   }
+
+      //   axes[this.axisX.name + " vs " + this.axisY.name] = 'y'
+      //   axes[this.axisX.name + " vs " + this.axisY2.name] = 'y2'
+      //   ylabel2 = this.axisY2.name
+      // }
+
       debugger
-      this.updatePlot(axisX, columns, axes, ylabel, ylabel2);
+      let plotColor = []
+      for (let k = 0; k < this.axisY.length; k++) {
+        plotColor.push(this.graphColor[this.axisY[k].index])
+      }
+      plotColor.push(this.graph1Color)
+
+      this.updatePlot(axisX, columns, axes, ylabel, ylabel2, plotColor);
 
     },
-    updatePlot: function(_axisX, _columns, _axes, _ylabel, _ylabel2) {
+    updatePlot: function(_axisX, _columns, _axes, _ylabel, _ylabel2, plotColor) {
       let plotOptions = {
           bindto: '#plot3',
           size: {
@@ -183,7 +239,7 @@ export default {
             type: this.type
           },
           color: {
-            pattern: [this.graphColor, this.graph1Color]
+            pattern: plotColor
           },
           legend: {
             position: 'inset',

@@ -198,16 +198,25 @@ async function doLicense() {
     const from = Date.parse(verifyInfo.from)
     const to = Date.parse(verifyInfo.to)
 
-    let message = ''
-    if (from <= today && today <= to) 
-      message = 'This application has licensed'
-    else
-      message = 'The license is expired'
+    let message = 'This application has licensed'
+    let details = ''
+
+    if (verifyInfo.from != undefined && verifyInfo.to != undefined &&
+        verifyInfo.from != '' && verifyInfo.to != '' ) 
+    {
+      if (!(from <= today && today <= to)) {
+        message = 'The license is expired'
+      }
+      details = 'From: ' + verifyInfo.from + ' To: ' + verifyInfo.to
+    }
+    else {
+      details = 'Permanent : From: -  To: -'
+    }
 
     const res = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
       title: 'License Information',
       message: message,
-      detail: 'From: ' + verifyInfo.from + ' To: ' + verifyInfo.to,
+      detail: details,
       buttons: ['Ok', 'Update new license']
     })
 
@@ -237,11 +246,12 @@ async function updateLicense() {
     title: 'License',
     message: 'Please update the license file.',
     detail: 'You can create machine key and then send it to the administrator. After then he will give you license file',
-    buttons: ['Generate machine key', 'Update license']
+    buttons: ['Cancel', 'Generate machine key', 'Update license']
   })
 
-  if (res == 0) {
-    const response = dialog.showSaveDialogSync({
+  console.log('res : ' + res)
+  if (res == 1) {
+    const response = dialog.showSaveDialogSync(BrowserWindow.getFocusedWindow(),{
       title: 'Save machine key',
       defaultPath: 'machineKey.pem',
       buttonLabel: 'Save',
@@ -254,8 +264,8 @@ async function updateLicense() {
     if (response != undefined)
       GenerateMachineKey(response)
   }
-  else if (res == 1) {
-    const response = dialog.showOpenDialogSync({
+  else if (res == 2) {
+    const response = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(),{
       title: 'Update license',
       defaultPath: app.getPath('downloads'),
       buttonLabel: 'Select',
