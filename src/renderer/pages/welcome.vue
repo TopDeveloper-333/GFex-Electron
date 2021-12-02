@@ -19,7 +19,7 @@
     <div class="text-center">
       <div>
         <p style="font-size:7rem !important;font-weight:600;color:#4172c4">FastPlan*</p>
-        <p style="font-size:3rem !important;font-weight:600;color:#4172c4">DEVELOPMENT SCREENING / PLANNING<br/>
+        <p style="font-size:3rem !important;font-weight:600;color:#4172c4">FIELD DEVELOPMENT SCREENING / PLANNING / ECONOMICS<br/>
         &<br/>
         FIELD MONITORING / DRILLING / WORKOVER <br/>
         PLATFORM</p>

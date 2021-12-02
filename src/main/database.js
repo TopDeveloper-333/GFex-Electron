@@ -1,7 +1,7 @@
 import { ipcMain } from "electron"
 import { createConnection } from "typeorm"
 
-import { Project } from '../db/project.schema'
+import { Project, Plot } from '../db/project.schema'
 
 import fs from 'fs'
 import path from 'path'
@@ -27,10 +27,11 @@ export function DBinitialize() {
       logging: true,
       logger: 'simple-console',
       database: path.join(userDataPath, '/fastplan.db'),
-      entities: [ Project ],
+      entities: [ Project, Plot ],
     })
 
     let projectRepo = connection.getRepository(Project)
+    let plotRepo = connection.getRepository(Plot)
 
     let defaultProjectContent = () => {
       return {
@@ -455,6 +456,52 @@ export function DBinitialize() {
         fs.unlinkSync(path.join(userDataPath, '/data/RESULTS_SI.OUT'))
       }
     }
+
+    // ----------------------------------------------------
+    // save Plot
+    //
+    ipcMain.on('runSavePlot', async (event, _plot) => {
+      const userDataPath = app.getPath('userData')
+
+      try {
+        const plot = await plotRepo.create();
+
+        plot.plot_name = _plot.newPlotName
+
+        let content =  {
+          fastplan: {
+            isFDP: _plot.isFDP, 
+            isCondensate: _plot.isCondensate,
+            isEconomics: _plot.isEconomics,
+            isSeparatorOptimizer: _plot.isSeparatorOptimizer
+          },
+          sep: _plot.sep,
+          drygas: _plot.drygas,
+          surface: _plot.surface,
+          reservoir: _plot.reservoir,
+          wellhistory: _plot.wellhistory,
+          economics: _plot.economics,
+          operations: _plot.operations,
+          relPerm: _plot.relPerm,
+          gascondensate: _plot.gascondensate,
+          resKGKO: _plot.resKGKO
+        }
+        plot.project = JSON.stringify(content)
+        plot.plot = JSON.stringify(_plot.plot)
+        plot.created = new Date().toISOString().substr(0, 10)
+
+        await plotRepo.save(plot);
+        event.returnValue = {id : plot.id}
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runSavePlot: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
+      }
+    });
 
     // ----------------------------------------------------
     // List Projects

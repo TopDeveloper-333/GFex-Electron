@@ -269,6 +269,14 @@ export const actions = {
     else {
       commit(types.SAVE_RES_FASTPLAN, data)
     }
-  }
+  },
+  async runSavePlot({commit}, payload) {
+    const data = ipcRenderer.sendSync('runSavePlot', payload)
+    if (typeof (data) == 'string') {
+      return JSON.parse(data)
+    }
+    else 
+      return data
+  },
 
 }
