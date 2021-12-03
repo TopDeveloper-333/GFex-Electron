@@ -541,6 +541,7 @@ export function DBinitialize() {
         const selected_plots = _plot.selectedPlots
         const axisX = _plot.axisX
         const axisY = _plot.axisY
+        const axisY2 = _plot.axisY2
 
         console.log(_plot)
 
@@ -562,11 +563,18 @@ export function DBinitialize() {
           const plot = JSON.parse(PLOT_DATA.plot)
 
           let y = []
-          y[0] = PLOT_DATA.plot_name
-          for (let i = 0; i < plot.length; i ++)
+          y[0] = PLOT_DATA.plot_name + ':' + axisY.name
+          for (let i = 0; i < plot.length; i++)
             y[i+1] = plot[i][axisY.index]
 
           res.push(y)
+
+          let y2 = []
+          y2[0] = PLOT_DATA.plot_name + ':' + axisY2.name
+          for (let i = 0; i < plot.length; i++)
+            y2[i+1] = plot[i][axisY.index]
+
+          res.push(y2)
         };
 
         console.log(res)

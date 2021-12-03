@@ -14,7 +14,7 @@
         <div class="row g-0" style="background-color:#fdf500;">
           <div class="col-md-10 offset-md-1">
             <div class="card-body">
-              <h3 class="card-title gf-title">Plots for past projects
+              <h3 class="card-title gf-title">Plots for Multiple Realisations
               </h3>
               <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Select plots</u></p>
 
@@ -27,9 +27,11 @@
               <div style="display:flex;margin-bottom:6px;text-align:center" class="row">
                 <div class="col-3">
                   <label class="typo__label gf-item">Axis X:</label>
-                  <multiselect v-model="axisX" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select X axis."></multiselect>
+                  <multiselect v-model="axisX" :options="optionsX" track-by="name" label="name" :taggable="true" placeholder="Select X axis."></multiselect>
                   <label class="typo__label gf-item">Axis Y:</label>
-                  <multiselect v-model="axisY" :options="options" track-by="name" label="name" :maxHeight="250" :taggable="true" placeholder="Select Y axis."></multiselect>
+                  <multiselect v-model="axisY" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y axis."></multiselect>
+                  <label class="typo__label gf-item">Axis Y2:</label>
+                  <multiselect v-model="axisY2" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y2 axis."></multiselect>
 
                   <div style="margin-top:32px;display:flex;text-align:left">
                       <input type="color" style="height:50px;margin-right:20px;" id="axisColor" name="axisColor" v-model="axisColor" @change="onApplyColor($event)">
@@ -132,14 +134,18 @@ export default {
       isLoading: false,
       fullPage: true,
       dataContent: '',
-      axisX: null,
+      axisX: { name: "Time (Year)", index: 0},
       axisY: null,
+      axisY2: null,
       axisColor: '#ffffff',
       plotSheet: null,
       selectedPlots: [[]],
       allPlotNames : [],
       graphColor: [],
       graphColorNames: [],
+      optionsX: [
+        { name: "Time (Year)", index: 0}, 
+      ],
       options: [
         { name: "Time (Year)", index: 0}, 
         { name: "Gas Rate (MMSCF/D)", index: 1}, 
@@ -211,9 +217,9 @@ export default {
         return;
       }
 
-      if (this.axisX == null || this.axisY == null) {
+      if (this.axisX == null || this.axisY == null || this.axisY2 == null) {
         this.messageName = 'Warning'
-        this.messageDescription = 'Please select the axis X or Y.'
+        this.messageDescription = 'Please select the axis X, Y or Y2.'
         this.showDialog('messageModal', true);
         return;
       }
@@ -226,7 +232,8 @@ export default {
       const data = await store.dispatch('project/runMultiPlot', {
         selectedPlots: this.selectedPlots,
         axisX: this.axisX,
-        axisY: this.axisY
+        axisY: this.axisY,
+        axisY2: this.axisY2
       })
       this.isLoading = false
 
@@ -235,11 +242,19 @@ export default {
       debugger
 
       let plotColor = []
+      // for Y, Y2 pair
       this.selectedPlots.forEach(element => {
+        plotColor.push(this.graphColor[element[0]])
         plotColor.push(this.graphColor[element[0]])
       });
       
-      this.updatePlot(this.axisX.name, data, [], this.axisY.name, null, plotColor)
+      let axes = {}
+      for (const selectedPlot of this.selectedPlots) {
+        const plotname = this.plotNameFromId(selectedPlot[0])
+        axes[plotname + ':' + this.axisY2.name] =  'y2'
+      }
+
+      this.updatePlot(this.axisX.name, data, axes, this.axisY.name, this.axisY2.name, plotColor)
     },
     updatePlot: function(_axisX, _columns, _axes, _ylabel, _ylabel2, plotColor) {
       let plotOptions = {
