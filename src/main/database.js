@@ -458,6 +458,34 @@ export function DBinitialize() {
     }
 
     // ----------------------------------------------------
+    // List Plots
+    //
+    ipcMain.on('listPlots', async (event, ...args) => {
+      const userDataPath = app.getPath('userData')
+
+      try {
+        let plotList = await plotRepo.find();
+        let result = []
+
+        plotList.forEach(element => {
+          result.push({id: element.id, name: element.plot_name, group: element.created})
+        });
+
+        console.log(result)
+        event.returnValue = result
+      } 
+      catch (err) {
+        
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "listPlots: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
+      }
+    });
+
+    // ----------------------------------------------------
     // save Plot
     //
     ipcMain.on('runSavePlot', async (event, _plot) => {
@@ -497,6 +525,59 @@ export function DBinitialize() {
         // write log message
         let logFile = path.join(userDataPath, '/data/app.log')
         fs.appendFileSync(logFile, "runSavePlot: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
+      }
+    });
+
+    // ----------------------------------------------------
+    // Run Multiple Plots
+    //
+    ipcMain.on('runMultiPlot', async (event, _plot) => {
+      const userDataPath = app.getPath('userData')
+
+      try {
+        const selected_plots = _plot.selectedPlots
+        const axisX = _plot.axisX
+        const axisY = _plot.axisY
+
+        console.log(_plot)
+
+        let res = []
+        {
+          const PLOT_DATA = await plotRepo.findOne(selected_plots[0][0])
+          const plot = JSON.parse(PLOT_DATA.plot)
+
+          let x = []
+          x[0] = axisX.name
+          for (let i = 0; i < plot.length; i ++)
+            x[i+1] = plot[i][axisX.index]
+          
+          res.push(x)
+        }
+
+        for (const element of selected_plots) {
+          const PLOT_DATA = await plotRepo.findOne(element[0])
+          const plot = JSON.parse(PLOT_DATA.plot)
+
+          let y = []
+          y[0] = PLOT_DATA.plot_name
+          for (let i = 0; i < plot.length; i ++)
+            y[i+1] = plot[i][axisY.index]
+
+          res.push(y)
+        };
+
+        console.log(res)
+        event.returnValue = res
+      } 
+      
+      catch (err) {
+        
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "runMultiplePlots: TRY-CATCH\n")
         fs.appendFileSync(logFile, err.toString())
 
         event.returnValue = []
@@ -624,23 +705,23 @@ export function DBinitialize() {
       }
     });
   
-    ipcMain.on('deleteProject', async (event, _project) => {
-      const userDataPath = app.getPath('userData')
+    // ipcMain.on('deleteProject', async (event, _project) => {
+    //   const userDataPath = app.getPath('userData')
 
-      try {
-        const project = await projectRepo.create(_project);
-        await projectRepo.remove(project);
-        event.returnValue = await projectRepo.find();
-      } 
-      catch (err) {
-        // write log message
-        let logFile = path.join(userDataPath, '/data/app.log')
-        fs.appendFileSync(logFile, "deleteProject: TRY-CATCH\n")
-        fs.appendFileSync(logFile, err.toString())
+    //   try {
+    //     const project = await projectRepo.create(_project);
+    //     await projectRepo.remove(project);
+    //     event.returnValue = await projectRepo.find();
+    //   } 
+    //   catch (err) {
+    //     // write log message
+    //     let logFile = path.join(userDataPath, '/data/app.log')
+    //     fs.appendFileSync(logFile, "deleteProject: TRY-CATCH\n")
+    //     fs.appendFileSync(logFile, err.toString())
 
-        event.returnValue = []
-      }
-    });
+    //     event.returnValue = []
+    //   }
+    // });
 
     ipcMain.on('requestKGKO', async (event, _corey) => {
       const userDataPath = app.getPath('userData')

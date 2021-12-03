@@ -9,6 +9,7 @@ import FastplanResult from '../pages/projects/fastplan_result.vue'
 import MonitoringResult from '../pages/projects/monitoring_result.vue'
 import Separator from '../pages/projects/separator.vue'
 import SeparatorResult from '../pages/projects/separator_result.vue'
+import Plots from '../pages/projects/plots.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,7 @@ const router = new Router({
     { path: '/monitoringresult', name: 'monitoringresult', component: MonitoringResult },
     { path: '/separator', name: 'separator', component: Separator },
     { path: '/separatorresult', name: 'separatorresult', component: SeparatorResult },
+    { path: '/multipleplots', name: 'multipleplots', component: Plots },
     
 
     { path: '*', redirect: '/welcome' },

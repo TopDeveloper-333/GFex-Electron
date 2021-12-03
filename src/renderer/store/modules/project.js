@@ -270,6 +270,16 @@ export const actions = {
       commit(types.SAVE_RES_FASTPLAN, data)
     }
   },
+  async listPlots ({commit}) {
+    const data = ipcRenderer.sendSync('listPlots')
+
+    if (typeof(data) == 'string') {
+      return JSON.parse(data)
+    }
+    else {
+      return data
+    }
+  },
   async runSavePlot({commit}, payload) {
     const data = ipcRenderer.sendSync('runSavePlot', payload)
     if (typeof (data) == 'string') {
@@ -278,5 +288,12 @@ export const actions = {
     else 
       return data
   },
-
+  async runMultiPlot({commit}, payload) {
+    const data = ipcRenderer.sendSync('runMultiPlot', payload)
+    if (typeof (data) == 'string') {
+      return JSON.parse(data)
+    }
+    else 
+      return data
+  },
 }

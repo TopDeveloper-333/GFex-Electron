@@ -49,7 +49,7 @@
                 <div class="col-2"></div>
                 <div class="col-5">
 
-                  <label class="gf-item">Plot for all projects
+                  <label class="gf-item">Plot for past projects
                   </label>
 
                   <div>
@@ -129,7 +129,7 @@ export default {
       modal.style.display = "none";
     },
     onGoPlots: async function (event) {
-
+      this.$router.replace({ name: 'multipleplots' })
     },
     onCreatePage: async function(event) {
       if (this.myProjectName=="")
