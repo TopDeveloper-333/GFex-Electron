@@ -257,9 +257,11 @@ export default {
       // calculate y2max value
       let _y2Max = 100
       if (data.length >= 3) {
-        for (let i = 1; i< data[2].length; i++) {
-          if (_y2Max < data[2][i]) 
-            _y2Max = data[2][i]
+        for (let j = 0; j < data.length / 2; j++) {
+          for (let i = 1; i< data[j*2].length; i++) {
+            if (_y2Max < data[j*2][i]) 
+              _y2Max = data[j*2][i]
+          }
         }
       }
 
@@ -291,6 +293,7 @@ export default {
             pattern: plotColor
           },
           legend: {
+            show: false,
             position: 'inset',
             inset: {
               anchor: 'top-left',

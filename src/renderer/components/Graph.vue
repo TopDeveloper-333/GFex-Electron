@@ -253,6 +253,7 @@ export default {
             pattern: plotColor
           },
           legend: {
+            show: false,
             position: 'inset',
             inset: {
               anchor: 'top-left',
