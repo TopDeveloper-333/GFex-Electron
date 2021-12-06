@@ -239,8 +239,7 @@ export default {
 
       console.log(data)
 
-      debugger
-
+      // calculate plot color
       let plotColor = []
       // for Y, Y2 pair
       this.selectedPlots.forEach(element => {
@@ -248,15 +247,34 @@ export default {
         plotColor.push(this.graphColor[element[0]])
       });
       
+      // calculate axes
       let axes = {}
       for (const selectedPlot of this.selectedPlots) {
         const plotname = this.plotNameFromId(selectedPlot[0])
         axes[plotname + ':' + this.axisY2.name] =  'y2'
       }
 
-      this.updatePlot(this.axisX.name, data, axes, this.axisY.name, this.axisY2.name, plotColor)
+      // calculate y2max value
+      let _y2Max = 100
+      if (data.length >= 3) {
+        for (let i = 1; i< data[2].length; i++) {
+          if (_y2Max < data[2][i]) 
+            _y2Max = data[2][i]
+        }
+      }
+
+      _y2Max = _y2Max * 1.2 // adjust height
+
+      // calculate y2region
+      let y2classes = {}
+      for (const selectedPlot of this.selectedPlots) {
+        const plotname = this.plotNameFromId(selectedPlot[0])
+        y2classes[plotname + ':' + this.axisY2.name] =  'dotted'
+      }
+
+      this.updatePlot(this.axisX.name, data, axes, this.axisY.name, this.axisY2.name, plotColor, _y2Max, y2classes)
     },
-    updatePlot: function(_axisX, _columns, _axes, _ylabel, _ylabel2, plotColor) {
+    updatePlot: function(_axisX, _columns, _axes, _ylabel, _ylabel2, plotColor, _y2Max, _y2classes) {
       let plotOptions = {
           bindto: '#plot4',
           size: {
@@ -266,7 +284,8 @@ export default {
             x: _axisX,
             columns: _columns,
             axes: _axes,
-            type: this.type
+            type: this.type,
+            classes: _y2classes
           },
           color: {
             pattern: plotColor
@@ -294,6 +313,7 @@ export default {
               }
             },
             y2: {
+              max: _y2Max,
               show: _ylabel2 != null, // ADD
               label: {
                 text: _ylabel2,

@@ -255,7 +255,7 @@ thead.resizable {
 }
 
 .c3-axis {
-  stroke-width: 4px !important;
+  stroke-width: 3px !important;
 }
 
 /* .c3 svg {
@@ -264,25 +264,31 @@ thead.resizable {
 
 .c3 path {
   // stroke: var(--graph-color) !important;
-  stroke-width: 4px;
+  stroke-width: 3px;
 }
 .c3-circle {
   // fill: var(--graph-color) !important;
-  stroke-width: 4px;
+  opacity: 0 !important;
 }
 
-.c3 line {
+.c3-circle._expanded_ {
+  // fill: var(--graph-color) !important;
   stroke-width: 2px;
+  opacity: 1 !important;
 }
+
+// .c3 line {
+//   stroke-width: 2px;
+// }
 
 .c3 path.domain {
   stroke: var(--axis-color) !important;
-  stroke-width: 4px;
+  stroke-width: 3px;
 }
 
 g.tick line {
   stroke: var(--axis-color) !important;
-  stroke-width: 4px;
+  stroke-width: 3px;
 }
 
 .c3 text {
@@ -311,4 +317,8 @@ tspan {
 
 .jdropdown-default .jdropdown-group-name {
   color: black !important;
+}
+
+.c3-chart-lines .c3-target-dotted { 
+  stroke-dasharray: 6, 6; 
 }

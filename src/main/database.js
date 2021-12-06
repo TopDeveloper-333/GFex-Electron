@@ -546,36 +546,67 @@ export function DBinitialize() {
         console.log(_plot)
 
         let res = []
-        {
-          const PLOT_DATA = await plotRepo.findOne(selected_plots[0][0])
-          const plot = JSON.parse(PLOT_DATA.plot)
 
-          let x = []
-          x[0] = axisX.name
-          for (let i = 0; i < plot.length; i ++)
-            x[i+1] = plot[i][axisX.index]
-          
+        // create X axis
+        let x = []
+        {
+          for (const element of selected_plots) {
+
+            const PLOT_DATA = await plotRepo.findOne(element[0])
+            const plot = JSON.parse(PLOT_DATA.plot)
+
+            for (let i = 0; i < plot.length; i++) {
+              const year = plot[i][axisX.index]
+
+              let bFound = false
+              for (let j = 0; j<x.length; j++) {
+                if (x[j] == year)
+                  bFound = true
+              }
+
+              if (bFound == false)
+                x.push(year)
+            }
+          }
+
+          x.sort()
+          x.unshift(axisX.name)
           res.push(x)
         }
 
-        for (const element of selected_plots) {
-          const PLOT_DATA = await plotRepo.findOne(element[0])
-          const plot = JSON.parse(PLOT_DATA.plot)
+        // create y, y2 axis
+        {
+          for (const element of selected_plots) {
+            let y = []
+            let y2 = []
 
-          let y = []
-          y[0] = PLOT_DATA.plot_name + ':' + axisY.name
-          for (let i = 0; i < plot.length; i++)
-            y[i+1] = plot[i][axisY.index]
+            for (let i = 0; i<x.length; i++) {
+              y[i] = null, y2[i] = null
+            }
 
-          res.push(y)
+            const PLOT_DATA = await plotRepo.findOne(element[0])
+            const plot = JSON.parse(PLOT_DATA.plot)
+           
+            y[0] = PLOT_DATA.plot_name + ':' + axisY.name
+            y2[0] = PLOT_DATA.plot_name + ':' + axisY2.name
 
-          let y2 = []
-          y2[0] = PLOT_DATA.plot_name + ':' + axisY2.name
-          for (let i = 0; i < plot.length; i++)
-            y2[i+1] = plot[i][axisY.index]
+            for (let i = 0; i < plot.length; i++) {
+              const year = plot[i][axisX.index]
 
-          res.push(y2)
-        };
+              let index = -1
+              for (let j = 0; j < x.length; j++) {
+                if (x[j] == year) 
+                  index = j
+              }
+
+              y[index] = plot[i][axisY.index]
+              y2[index] = plot[i][axisY2.index]
+            }
+
+            res.push(y)
+            res.push(y2)
+          }
+        }
 
         console.log(res)
         event.returnValue = res
