@@ -10,6 +10,8 @@ import MonitoringResult from '../pages/projects/monitoring_result.vue'
 import Separator from '../pages/projects/separator.vue'
 import SeparatorResult from '../pages/projects/separator_result.vue'
 import Plots from '../pages/projects/plots.vue'
+import Theme from '../pages/settings/theme.vue'
+import RemoveProject from '../pages/settings/removeproject.vue'
 
 Vue.use(Router)
 
@@ -32,7 +34,8 @@ const router = new Router({
     { path: '/separator', name: 'separator', component: Separator },
     { path: '/separatorresult', name: 'separatorresult', component: SeparatorResult },
     { path: '/multipleplots', name: 'multipleplots', component: Plots },
-    
+    { path: '/theme', name: 'settings.theme', component: Theme },
+    { path: '/removeproject', name: 'settings.removeproject', component: RemoveProject },
 
     { path: '*', redirect: '/welcome' },
   ],

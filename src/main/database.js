@@ -532,6 +532,29 @@ export function DBinitialize() {
     });
 
     // ----------------------------------------------------
+    // Delete plot
+    //
+    ipcMain.on('deletePlot', async (event, _plot) => {
+      const userDataPath = app.getPath('userData')
+
+      try {
+        const plot = await plotRepo.findOne(_plot.id)
+        await plotRepo.remove(plot);
+        event.returnValue = [];
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "deletePlot: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
+
+        event.returnValue = []
+      }
+      
+    })
+
+
+    // ----------------------------------------------------
     // Run Multiple Plots
     //
     ipcMain.on('runMultiPlot', async (event, _plot) => {
@@ -556,12 +579,13 @@ export function DBinitialize() {
             const plot = JSON.parse(PLOT_DATA.plot)
 
             for (let i = 0; i < plot.length; i++) {
-              const year = plot[i][axisX.index]
+              const year = parseInt(plot[i][axisX.index])
 
               let bFound = false
               for (let j = 0; j<x.length; j++) {
-                if (x[j] == year)
-                  bFound = true
+                if (x[j] == year) {
+                  bFound = true; break
+                }
               }
 
               if (bFound == false)
@@ -591,12 +615,13 @@ export function DBinitialize() {
             y2[0] = PLOT_DATA.plot_name + ':' + axisY2.name
 
             for (let i = 0; i < plot.length; i++) {
-              const year = plot[i][axisX.index]
+              const year = parseInt(plot[i][axisX.index])
 
               let index = -1
               for (let j = 0; j < x.length; j++) {
-                if (x[j] == year) 
-                  index = j
+                if (x[j] == year) {
+                  index = j; break;
+                }
               }
 
               y[index] = plot[i][axisY.index]
@@ -744,23 +769,23 @@ export function DBinitialize() {
       }
     });
   
-    // ipcMain.on('deleteProject', async (event, _project) => {
-    //   const userDataPath = app.getPath('userData')
+    ipcMain.on('deleteProject', async (event, _project) => {
+      const userDataPath = app.getPath('userData')
 
-    //   try {
-    //     const project = await projectRepo.create(_project);
-    //     await projectRepo.remove(project);
-    //     event.returnValue = await projectRepo.find();
-    //   } 
-    //   catch (err) {
-    //     // write log message
-    //     let logFile = path.join(userDataPath, '/data/app.log')
-    //     fs.appendFileSync(logFile, "deleteProject: TRY-CATCH\n")
-    //     fs.appendFileSync(logFile, err.toString())
+      try {
+        const project = await projectRepo.findOne(_project.id)
+        await projectRepo.remove(project);
+        event.returnValue = [];
+      } 
+      catch (err) {
+        // write log message
+        let logFile = path.join(userDataPath, '/data/app.log')
+        fs.appendFileSync(logFile, "deleteProject: TRY-CATCH\n")
+        fs.appendFileSync(logFile, err.toString())
 
-    //     event.returnValue = []
-    //   }
-    // });
+        event.returnValue = []
+      }
+    });
 
     ipcMain.on('requestKGKO', async (event, _corey) => {
       const userDataPath = app.getPath('userData')

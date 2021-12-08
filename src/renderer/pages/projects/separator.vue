@@ -11,7 +11,7 @@
             <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
           </div>
         </div>
-        <div class="row g-0" style="background-color:#fdf500;">
+        <div class="row g-0" style="background-color:var(--background-color);">
           <!-- <div class="col-md-2" style="display:flex; justify-content:center;">
             <img src="../..assets/image/LOGO_GFEX.png" class="img-fluid rounded-start" style="opacity:0.6;max-width:250px;max-height:300px">
           </div> -->
@@ -253,7 +253,7 @@ export default {
       cell.style.color = 'white'
     },
     markNormalCell: function(cell) {
-      cell.style.backgroundColor = 'green'
+      cell.style.backgroundColor = 'var(--secondary-color)'
       cell.style.color = 'white'
     },
     validateOriginalStream1:function(instance, cell, col, row, val, label, cellName) {

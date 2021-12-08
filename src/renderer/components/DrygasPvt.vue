@@ -70,7 +70,7 @@ export default {
       cell.style.color = 'white'
     },
     markNormalCell: function(cell) {
-      cell.style.backgroundColor = 'green'
+      cell.style.backgroundColor = 'var(--secondary-color)'
       cell.style.color = 'white'
     },
     validateStandardConditions:function(instance, cell, col, row, val, label, cellName) {

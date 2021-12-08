@@ -24,7 +24,10 @@ export const state = {
   resOPT: [],
   resFastPlan: {},
   resMonitoring: {},
-  resCvdOut: []
+  resCvdOut: [],
+  backgroundColor: null,
+  primaryColor: null,
+  secondaryColor: null,
 }
 
 function getCookie(name, defaultValue) {
@@ -59,7 +62,10 @@ export const getters = {
   resOPT: state => state.resOPT,
   resFastPlan: state => state.resFastPlan,
   resMonitoring: state => state.resMonitoring,
-  resCvdOut: state => state.resCvdOut
+  resCvdOut: state => state.resCvdOut,
+  backgroundColor: state => state.backgroundColor,
+  primaryColor: state => state.primaryColor,
+  secondaryColor: state => state.secondaryColor
 }
 
 export const mutations = {
@@ -137,9 +143,17 @@ export const mutations = {
   [types.SAVE_RES_MONITORING] (state, resMonitoring) {
     state.resMonitoring = resMonitoring
   },
+  [types.SAVE_THEME_COLORS](state, colors) {
+    state.backgroundColor = colors.backgroundColor
+    state.primaryColor = colors.primaryColor
+    state.secondaryColor = colors.secondaryColor
+  }
 }
 
 export const actions = {
+  async saveThemeColors({commit}, payload) {
+    commit(types.SAVE_THEME_COLORS, payload)
+  },
   async listProjects ({commit}) {
     const data = ipcRenderer.sendSync('listProjects')
 
@@ -174,6 +188,10 @@ export const actions = {
   },
   async saveProject({commit}, payload) {
     const data = ipcRenderer.sendSync('saveProject', payload)
+  },
+  async deleteProject({commit}, payload) {
+    const data = ipcRenderer.sendSync('deleteProject', payload)
+    return data
   },
   saveFastPlan ({commit}, payload) {
     const isFDP = payload.isFDP
@@ -279,6 +297,10 @@ export const actions = {
     else {
       return data
     }
+  },
+  async deletePlot({commit}, payload) {
+    const data = ipcRenderer.sendSync('deletePlot', payload)
+    return data
   },
   async runSavePlot({commit}, payload) {
     const data = ipcRenderer.sendSync('runSavePlot', payload)

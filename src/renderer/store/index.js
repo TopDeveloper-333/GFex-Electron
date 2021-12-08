@@ -1,6 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersist from 'vuex-persist'
+import VueGoodTablePlugin from 'vue-good-table'
+import VueConfirmDialog from 'vue-confirm-dialog'
+import 'vue-good-table/dist/vue-good-table.css'
+
+Vue.use(VueGoodTablePlugin)
+Vue.use(VueConfirmDialog)
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
 
 Vue.use(Vuex)
 

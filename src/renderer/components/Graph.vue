@@ -351,7 +351,7 @@ function mountPlotDialog() {
 
 <style scoped>
 #plot3 {
-  background: green;
+  background: var(--secondary-color);
 }
 </style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

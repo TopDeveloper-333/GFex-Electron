@@ -11,7 +11,7 @@
             <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
           </div>
         </div>
-        <div class="row g-0" style="background-color:#fdf500;">
+        <div class="row g-0" style="background-color:var(--background-color);">
           <!-- <div class="col-md-4" style="display:flex; justify-content:center;">
             <img src="../../assets/image/LOGO_GFEX.png" class="img-fluid rounded-start" style="opacity:0.6;max-width:250px;max-height:300px">
           </div> -->
@@ -54,6 +54,20 @@
 
                   <div>
                     <label class="btn btn-primary gf-button" v-on:click="onGoPlots">Go</label>
+                  </div>
+
+                  <label class="gf-item" style="margin-top:40px">Remove projects or plots
+                  </label>
+
+                  <div>
+                    <label class="btn btn-primary gf-button" v-on:click="onRemoveProjects">Go</label>
+                  </div>
+
+                  <label class="gf-item" style="margin-top:40px">Change theme colors
+                  </label>
+
+                  <div>
+                    <label class="btn btn-primary gf-button" v-on:click="onChangeTheme">Go</label>
                   </div>
 
                 </div>
@@ -113,7 +127,10 @@ export default {
 
   computed: {
     ...mapState({
-      projectList : state => state.project.projectList
+      projectList : state => state.project.projectList,
+      backgroundColor : state => state.project.backgroundColor,
+      primaryColor : state => state.project.primaryColor,
+      secondaryColor : state => state.project.secondaryColor,
     }),
     options: function() {
       if (typeof(this.projectList) == 'string')
@@ -130,6 +147,12 @@ export default {
     },
     onGoPlots: async function (event) {
       this.$router.replace({ name: 'multipleplots' })
+    },
+    onRemoveProjects: async function(event) {
+      this.$router.replace({ name: 'settings.removeproject' })
+    },
+    onChangeTheme: async function(event) {
+      this.$router.replace({ name: 'settings.theme' })
     },
     onCreatePage: async function(event) {
       if (this.myProjectName=="")
@@ -163,6 +186,10 @@ export default {
     }
   },
   async mounted() {
+    document.documentElement.style.setProperty('--background-color', this.backgroundColor);
+    document.documentElement.style.setProperty('--primary-color', this.primaryColor);
+    document.documentElement.style.setProperty('--secondary-color', this.secondaryColor);
+
     this.isLoading = true
     await store.dispatch('project/listProjects')
     this.isLoading = false

@@ -11,7 +11,7 @@
             <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
           </div>
         </div>
-        <div class="row g-0" style="background-color:#fdf500;">
+        <div class="row g-0" style="background-color:var(--background-color);">
           <div class="col-md-10 offset-md-1">
             <div class="card-body">
               <h3 class="card-title gf-title"><{{projectName}}> Field Project
@@ -317,7 +317,7 @@ textarea{
     white-space: nowrap;
     overflow-x: auto;
     resize: none;
-    background-color: green;
+    background-color: var(--secondary-color);
     font-family: monospace !important;
     font-size: 1.25rem !important;
 }

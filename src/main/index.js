@@ -151,11 +151,34 @@ const sendMenuEvent = async (data) => {
 
 const template = [
   {
+    label: 'Home',
+    async click() {
+      sendMenuEvent({ route: '/' })
+    }
+  },
+  {
+    label: "Settings",
+    submenu: [
+      {
+        label: "Project management",
+        async click() {
+          sendMenuEvent({ route: '/removeproject' })
+        }
+      },
+      {
+        label: "Theme Colors",
+        async click() {
+          sendMenuEvent({ route: '/theme' })
+        }
+      }
+    ]
+  },
+  {
     label: "License",
     async click() {
       await doLicense()
     }
-  }
+  },
 ]
 
 ipcMain.on('getLicense', async (event, ...args) => { 
