@@ -10,6 +10,8 @@
         <multiselect v-model="axisY" :multiple="true" :options="options" :close-on-select="false" :maxHeight="250" track-by="name" label="name" :taggable="true" placeholder="Select multiple Y axies."></multiselect>
         <label class="typo__label gf-item">Axis Y2:</label>
         <multiselect v-model="axisY2" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y2 axis."></multiselect>
+        <label class="typo__label gf-item">Step:</label>
+        <multiselect v-model="selectedStep" :options="steps" track-by="name" label="name" :taggable="true" placeholder="Select step for graph."></multiselect>
 
         <div style="margin-top:32px;display:flex;text-align:left">
             <input type="color" style="min-width:50px;height:50px;margin-right:20px;" id="axisColor" name="axisColor" v-model="axisColor" @change="onApplyColor($event)">
@@ -41,7 +43,7 @@
     <div id="plotModal3" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close" id="plot-gf-close3" v-on:click="onCancel" >&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -64,7 +66,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   name: 'Graph',
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   props: ['options', 'data', 'labels', 'type'],
   
@@ -84,12 +86,14 @@ export default {
       graph1Color: '#b9ff78',
       isLoading: false,
       fullPage: true,
+      maxItems : 200,
+      selectedStep: null,
+      steps: []
     }
   },
 
   watch: {
     options: function(val, oldVal) {
-      debugger
       this.axisX = null
       this.axisY = null
       this.axisY2 = null
@@ -102,7 +106,27 @@ export default {
         let last = val[val.length - 1]
         this.graphColor[last.index] = "#" + randomColor
       }
-    }
+    },
+    data: function(val, oldVal) {
+      try {
+        let maxRows = val.length    
+        let maxStep = Math.floor(maxRows / 200)
+
+        if (maxStep <= 0)
+          maxStep = 1
+        
+        this.steps = []
+        for (let i = 1; i <= maxStep; i ++) {
+          this.steps.push({name: 'Step: ' + i, value: i})
+        }
+        this.selectedStep = this.steps[maxStep-1]
+      }
+      catch (e) {
+        this.steps = []
+        this.steps.push({name: 'Step: 1', value: 1})
+        this.selectedStep = this.steps[0]
+      }
+    }    
   },
 
   computed: {
@@ -118,7 +142,7 @@ export default {
       // document.documentElement.style.setProperty('--graph1-color', this.graph1Color);
       this.onShow(null);
     },
-    onShow: function(event) {
+    onShow: async function(event) {
 
       // ----------------------------------------------------------
       // Validation
@@ -128,6 +152,8 @@ export default {
         modal.style.display = "block";
         return;
       }
+      
+      document.documentElement.style.setProperty('--axis-color', this.axisColor);
 
       // ----------------------------------------------------------
       // Initialize variables
@@ -146,27 +172,27 @@ export default {
       // ----------------------------------------------------------
       // Start HERE
       // ----------------------------------------------------------
-      var numRows = this.data.length;
+      let numRows = this.data.length;
+      let steps = this.selectedStep.value
 
       // ----------------------------------------------------------------
       // add x data
       columns[0] = []
       columns[0][0] = this.axisX.name
-      for (let index = 1; index <= numRows; index++) {
-        columns[0][index] = this.data[index-1][this.axisX.index]
+      for (let index = 1; index <= Math.floor(numRows/steps); index++) {
+        columns[0][index] = this.data[(index-1) * steps][this.axisX.index]
       }
 
       // ----------------------------------------------------------------
       // add y data : multiple axis Y
       // ----------------------------------------------------------------
-      debugger
       var maxY = 0
       for (let i = 0; i < this.axisY.length; i++) {
 
         columns[i+1] = []
         columns[i+1][0] = this.axisY[i].name
-        for (let j = 1; j <= numRows; j++) {
-          columns[i+1][j] = this.data[j-1][this.axisY[i].index]
+        for (let j = 1; j <= Math.floor(numRows/steps); j++) {
+          columns[i+1][j] = this.data[(j-1) * steps][this.axisY[i].index]
 
           if (maxY < columns[i+1][j]) {
             ylabel = this.axisY[i].name
@@ -183,11 +209,11 @@ export default {
         columns[this.axisY.length+1][0] = this.axisY2.name
 
         y2Max = 0
-        for (let j = 1; j <= numRows; j++) {
-          columns[this.axisY.length+1][j] = this.data[j-1][this.axisY2.index]
+        for (let j = 1; j <= Math.floor(numRows/steps); j++) {
+          columns[this.axisY.length+1][j] = this.data[(j-1) * steps][this.axisY2.index]
 
-          if (y2Max < this.data[j-1][this.axisY2.index])
-            y2Max = this.data[j-1][this.axisY2.index]
+          if (y2Max < parseFloat(this.data[j-1][this.axisY2.index]))
+            y2Max = parseFloat(this.data[j-1][this.axisY2.index])
         }
 
         axes[this.axisY2.name] = 'y2'
@@ -236,7 +262,7 @@ export default {
       this.updatePlot(axisX, columns, axes, ylabel, ylabel2, plotColor, y2Max, y2Classes);
 
     },
-    updatePlot: function(_axisX, _columns, _axes, _ylabel, _ylabel2, plotColor, y2Max, y2Classes) {
+    updatePlot: async function(_axisX, _columns, _axes, _ylabel, _ylabel2, plotColor, y2Max, y2Classes) {
       let plotOptions = {
           bindto: '#plot3',
           size: {
@@ -283,8 +309,17 @@ export default {
                 position: 'outer-middle'
               }
             }
-          }
+          },
+          oninit: function () {
+            this.isLoading = true
+            console.log('chart is initialized')
+          },
+          onrendered: function() {
+            this.isLoading = false
+            console.log('chart is rendered')
+          }          
       }
+      
       this.plot = c3.generate(plotOptions);
     },
     onPrintGraph: async function(event) {

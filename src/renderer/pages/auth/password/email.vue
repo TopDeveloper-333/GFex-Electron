@@ -12,7 +12,7 @@
         <form @submit.prevent="send" @keydown="form.onKeydown($event)">
           <alert-success :form="form" :message="status" />
 
-          <div class="card-header gf-header"  style="background:yellow;color:rgb(13, 110, 253);font-size:3rem">
+          <div class="card-header gf-header"  style="background:var(--background-color);color:rgb(13, 110, 253);font-size:3rem">
             Reset Password
           </div>
 
@@ -45,7 +45,7 @@
 import Form from 'vform'
 
 export default {
-  middleware: 'guest',
+  middleware: ['guest', 'theme'],
 
   metaInfo () {
     return { title: this.$t('reset_password') }

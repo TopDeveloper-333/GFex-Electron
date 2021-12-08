@@ -124,7 +124,7 @@ import Index from './index.vue'
 export default {
   scrollToTop: false,
 
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   components: {
     Multiselect,

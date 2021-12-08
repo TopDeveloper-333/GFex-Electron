@@ -23,7 +23,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Oprations',
   
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
   
   props: ['isHidden'],
 

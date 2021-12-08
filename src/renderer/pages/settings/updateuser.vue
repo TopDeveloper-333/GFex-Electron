@@ -77,7 +77,7 @@ import Multiselect from 'vue-multiselect'
 export default {
   scrollToTop: false,
 
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   components: {
     Multiselect

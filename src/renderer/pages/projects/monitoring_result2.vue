@@ -6,15 +6,14 @@
              :is-full-page="fullPage"></loading>
       <div class="card mb-3">
         <div class="card-header gf-header">
-          <img src="../../assets/image/LOGO_GFEX.png" style="max-width:150px;max-height:180px;margin-left:-7px;float:left">
-          <div style="margin:auto">FastPlan* Gas & Gas Condensate<br>
-            <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
-          </div>
+          <img src="/assets/image/LOGO_GFEX.png" style="max-width:150px;max-height:180px;margin-left:-7px;float:left">
+          FastPlan* Gas & Gas Condensate<br>
+          <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
         </div>
         <div class="row g-0" style="background-color:var(--background-color);">
           <div class="col-md-10 offset-md-1">
             <div class="card-body">
-              <h3 class="card-title gf-title">Plots for Multiple Realisations
+              <h3 class="card-title gf-title"><{{projectName}}> Field Project
               </h3>
               <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Select plots</u></p>
 
@@ -32,6 +31,8 @@
                   <multiselect v-model="axisY" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y axis."></multiselect>
                   <label class="typo__label gf-item">Axis Y2:</label>
                   <multiselect v-model="axisY2" :options="options" track-by="name" label="name" :taggable="true" placeholder="Select Y2 axis."></multiselect>
+                  <label class="typo__label gf-item">Step:</label>
+                  <multiselect v-model="selectedStep" :options="steps" track-by="name" label="name" :taggable="true" placeholder="Select step for graph."></multiselect>
 
                   <div style="margin-top:32px;display:flex;text-align:left">
                       <input type="color" style="height:50px;margin-right:20px;" id="axisColor" name="axisColor" v-model="axisColor" @change="onApplyColor($event)">
@@ -134,7 +135,8 @@ export default {
       isLoading: false,
       fullPage: true,
       dataContent: '',
-      axisX: { name: "Time (Year)", index: 0},
+      resMonitoring: null,
+      axisX: { name: "Time (Months)", index: 0}, 
       axisY: null,
       axisY2: null,
       axisColor: '#ffffff',
@@ -144,49 +146,37 @@ export default {
       graphColor: [],
       graphColorNames: [],
       optionsX: [
-        { name: "Time (Year)", index: 0}, 
+        { name: "Time (Months)", index: 0}, 
       ],
       options: [
-        { name: "Time (Year)", index: 0}, 
-        { name: "Gas Rate (MMSCF/D)", index: 1}, 
-        { name: "Cond Rate (STB/D)", index: 2}, 
-        { name: "Gas TOT (MMSCF/D)", index: 3}, 
-        { name: "Cond TOT (MSTB/D)", index: 4}, 
-        { name: "CGR (STB/MMSCF)", index: 5}, 
-        { name: "GOR (SCF/STB)", index: 6}, 
-        { name: "CUM.GAS (BCF)", index: 7}, 
-        { name: "CUM.COND (MMSTB)", index: 8}, 
-        { name: "# of WELLS", index: 9}, 
-        { name: "Rate/AOF", index: 10}, 
-        { name: "DP CHOKE (psia)", index: 11}, 
-        { name: "Gas Recovery (%)", index: 12}, 
-        { name: "Oil Recovery (%)", index: 13}, 
-        { name: "Matrix-Fracture Transfer (MSCF/D)", index: 14}, 
-        { name: "Matrix Contribution (BCF)", index: 15}, 
-        { name: "Pr (psia)", index:16 }, 
-        { name: "PWF (psia)", index: 17}, 
-        { name: "PWH (psia)", index: 18}, 
-        { name: "PMAN (psia)", index: 19}, 
-        { name: "P_in (psia)", index: 20}, 
-        { name: "P_out (psia)", index: 21}, 
-        { name: "Sales_P (psia)", index: 22}, 
-        { name: "Yearly Revenue Gas (MM $)", index: 23}, 
-        { name: "CUM.Income Gas (MM $)", index: 24}, 
-        { name: "Yearly Revenue Cond (M $)", index: 25}, 
-        { name: "CUM.Income Cond (M $)", index: 26}, 
-        { name: "Compression Cost (M $)", index: 27}, 
-        { name: "P/Z", index:28 }, 
-        { name: "Condensate Saturation (SO)", index: 29}, 
+        { name: "Time (Months)", index: 0}, 
+        { name: "Pr (psia)", index: 1}, 
+        { name: "PWF (psia)", index: 2}, 
+        { name: "PWH (psia)", index: 3}, 
+        { name: "PMAN (psia)", index: 4}, 
+        { name: "P_in (psia)", index: 5}, 
+        { name: "P_out (psia)", index: 6}, 
+        { name: "P_SALES (psia)", index: 7}, 
+        { name: "QG (mmscf/day)", index: 8}, 
+        { name: "CUM.GAS (This Well) (BCF)", index: 9}, 
+        { name: "QG (All Wells) (mmscf/day)", index: 10}, 
+        { name: "TOTAL CUM.GAS (All Wells) (BCF)", index: 11}, 
+        { name: "P/Z", index: 12}, 
+        { name: "MATRIX-FRACTURE TRANSFER (MSCF/D)", index: 13}, 
+        { name: "MATRIX CONTRIBUTION (BCF)", index: 14}, 
       ],
       graphData: [],
       previousPage: '',
       messageName: '',
-      messageDescription: ''
+      messageDescription: '',
+      selectedStep: null,
+      steps: []
     }
   },
 
   computed: {
     ...mapState({
+      projectName : state => state.project.projectName,
     }),
   },
 
@@ -202,8 +192,81 @@ export default {
     onApplyColor: function(event) {
       this.onShow(null)
     },
+    loadData: function(plotReq) {
+      console.log(plotReq)
+
+      let steps = this.selectedStep.value
+
+      let res = []
+
+      // create X
+      let x = []
+      {
+        plotReq.selectedPlots.forEach(element => {
+          let plot = this.resMonitoring['RES_WELL' + (parseInt(element[0]) + 1)]
+
+          for (let i = 0; i < Math.floor(plot.length / steps); i++) {
+            const year = plot[i * steps][plotReq.axisX.index]
+
+            let bFound = false
+            for (let j = 0; j<x.length; j++) {
+              if (x[j] == year) {
+                bFound = true; break
+              }
+            }
+
+            if (bFound == false)
+              x.push(parseInt(year))
+          }
+        });
+
+        debugger
+        x.sort(function(a, b) { return a - b; })
+        x.unshift(plotReq.axisX.name)
+        res.push(x)
+      }
+      console.log(x)
+
+      // create y, y2
+      {
+        plotReq.selectedPlots.forEach(element => {
+          let y = []
+          let y2 = []
+
+          for (let i = 0; i<x.length; i++) {
+            y[i] = null, y2[i] = null
+          }
+
+          let plot = this.resMonitoring['RES_WELL' + (parseInt(element[0]) + 1)]
+          
+          y[0] = 'WELL'+ (parseInt(element[0]) + 1) + ':' + plotReq.axisY.name
+          y2[0] = 'WELL'+ (parseInt(element[0]) + 1) + ':' + plotReq.axisY2.name
+
+          for (let i = 0; i < plot.length; i++) {
+            const year = plot[i][plotReq.axisX.index]
+
+            debugger
+            let index = -1
+            for (let j = 0; j < x.length; j++) {
+              if (x[j] == parseInt(year)) {
+                index = j; break;
+              }
+            }
+
+            y[index] = plot[i][plotReq.axisY.index]
+            y2[index] = plot[i][plotReq.axisY2.index]
+          }
+
+          res.push(y)
+          res.push(y2)        
+        });
+      }
+
+      return res
+    },
     onShow: async function(event) {
 
+      // validate 
       let isEmpty = true
       this.selectedPlots.forEach(element => {
         if (element[0] != '')
@@ -224,20 +287,15 @@ export default {
         return;
       }
 
-      console.log(this.selectedPlots)
-      console.log(this.axisX)
-      console.log(this.axisY)
-
+      // load data
       this.isLoading = true
-      const data = await store.dispatch('project/runMultiPlot', {
+      const data = this.loadData({
         selectedPlots: this.selectedPlots,
         axisX: this.axisX,
         axisY: this.axisY,
         axisY2: this.axisY2
       })
       this.isLoading = false
-
-      console.log(data)
 
       // calculate plot color
       let plotColor = []
@@ -246,7 +304,7 @@ export default {
         plotColor.push(this.graphColor[element[0]])
         plotColor.push(this.graphColor[element[0]])
       });
-      
+
       // calculate axes
       let axes = {}
       for (const selectedPlot of this.selectedPlots) {
@@ -260,7 +318,7 @@ export default {
         for (let j = 0; j < data.length / 2; j++) {
           for (let i = 1; i< data[j*2].length; i++) {
             if (_y2Max < parseFloat(data[j*2][i])) 
-              _y2Max = parseFloat(data[j*2][i])            
+              _y2Max = parseFloat(data[j*2][i])
           }
         }
       }
@@ -378,7 +436,7 @@ export default {
       this.showDialog('exitModal', true);
     },
     onPrevPage: function(event) {
-      this.$router.replace('home')
+      this.$router.replace({ name: 'monitoringresult', params: { resMonitoring: this.resMonitoring } })
     },
     updatePlotSheet: function(instance, cell, x, y, value) {
       var numRows = this.plotSheet.options.data.length;
@@ -395,19 +453,41 @@ export default {
           this.graphColor[element[0]] = '#' + randomColor
         }
       })
-    }
+    },
+    calculateSteps: function(val) {
+      try {
+        let maxRows = val.length    
+        let maxStep = Math.floor(maxRows / 200)
+
+        if (maxStep <= 0)
+          maxStep = 1
+        
+        this.steps = []
+        for (let i = 1; i <= maxStep; i ++) {
+          this.steps.push({name: 'Step: ' + i, value: i})
+        }
+        this.selectedStep = this.steps[maxStep-1]
+      }
+      catch (e) {
+        this.steps = []
+        this.steps.push({name: 'Step: 1', value: 1})
+        this.selectedStep = this.steps[0]
+      }
+    },
   },
   async mounted() {
-    this.isLoading = true
-    this.allPlotNames = await store.dispatch('project/listPlots')
-    this.isLoading = false
+    this.resMonitoring = this.$route.params.resMonitoring
+
+    this.allPlotNames = []
+    for (let i = 0; i < this.resMonitoring.NumberOfWells; i++) {
+      this.allPlotNames.push({id: "" + i, name: 'WELL' + (i+1), group:''})
+    }
 
     this.allPlotNames.forEach(element => {
       this.graphColorNames["" + element.id] = element.name
     })
 
-    console.log(this.allPlotNames)
-    console.log(this.graphColorNames)
+    this.calculateSteps(this.resMonitoring['RES_WELL1'])
 
     this.plotSheet = jspreadsheet(document.getElementById('plotSheet'), {
         allowInsertRow:true,

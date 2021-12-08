@@ -76,7 +76,7 @@
     <div id="exitModal" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close">&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -131,7 +131,7 @@ export default {
     Loading
   },
 
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   // async asyncData () {
   //   const { data: projects } = await axios.get('/api/projects')
@@ -251,7 +251,7 @@ export default {
       // payload.relPerm = this.relPerm 
       // payload.resKGKO = this.resKGKO
       // payload.gascondensate = this.gascondensate
-      await store.dispatch('project/runMonitoringProject', payload)
+      return await store.dispatch('project/runMonitoringProject', payload)
     },
     runDryGasProject: async function() {
       let payload = {}
@@ -405,8 +405,8 @@ export default {
       }
       else {
         this.isLoading = false
-        await this.runMonitoringProject()
-        this.$router.replace('monitoringresult');
+        let resMonitoring = await this.runMonitoringProject()
+        this.$router.replace({ name: 'monitoringresult', params: { resMonitoring: resMonitoring } });
       }
         
     }

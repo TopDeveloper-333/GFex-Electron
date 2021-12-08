@@ -57,7 +57,7 @@ import Multiselect from 'vue-multiselect'
 export default {
   name: 'Reservoir',
   
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   components: {
     Multiselect

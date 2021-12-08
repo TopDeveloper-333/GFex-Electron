@@ -80,7 +80,7 @@ export default {
     LoginWithGithub
   },
 
-  middleware: 'guest',
+  middleware: ['guest', 'theme'],
 
   metaInfo () {
     return { title: this.$t('register') }

@@ -56,7 +56,7 @@
     <div id="exitModal" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close" id="gf-exit-cancel">&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -89,7 +89,7 @@ import Graph from '~/components/Graph.vue';
 // import axios from 'axios'
 export default {
   name: 'SeparatorResult',
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   metaInfo () {
     return { title: this.$t('Separtor Processing / Optimizer') }

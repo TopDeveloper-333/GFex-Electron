@@ -49,7 +49,7 @@
 
       <div class="row" style="margin-bottom:24px">
         <span class="gf-item" style="width:200px">Well #{{entry.id + 1}} :</span>
-        <input class="form-control gf-control" v-model="entry.name" style="width:300px;background:yellow;border-color:black" type="text">
+        <input class="form-control gf-control" v-model="entry.name" style="width:300px;background:var(--background-color);border-color:black" type="text">
       </div>
 
       <multiselect v-model="entry.option" :options="testWellDataOptions"  style="width:460px" @select="onChangedOption"
@@ -79,7 +79,7 @@ import Multiselect from 'vue-multiselect'
 export default {
   name: 'WellHistory',
   
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
   
   props: ['isHidden'],
 

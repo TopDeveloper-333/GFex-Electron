@@ -19,7 +19,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Economics',
   
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
   
   props: ['isHidden'],
 

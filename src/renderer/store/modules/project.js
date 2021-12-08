@@ -23,11 +23,11 @@ export const state = {
   resKGKO: [],
   resOPT: [],
   resFastPlan: {},
-  resMonitoring: {},
   resCvdOut: [],
   backgroundColor: null,
   primaryColor: null,
   secondaryColor: null,
+  textColor: null,
 }
 
 function getCookie(name, defaultValue) {
@@ -61,11 +61,11 @@ export const getters = {
   resKGKO: state => state.resKGKO,
   resOPT: state => state.resOPT,
   resFastPlan: state => state.resFastPlan,
-  resMonitoring: state => state.resMonitoring,
   resCvdOut: state => state.resCvdOut,
   backgroundColor: state => state.backgroundColor,
   primaryColor: state => state.primaryColor,
-  secondaryColor: state => state.secondaryColor
+  secondaryColor: state => state.secondaryColor,
+  textColor: state => state.textColor
 }
 
 export const mutations = {
@@ -140,13 +140,11 @@ export const mutations = {
   [types.SAVE_RES_FASTPLAN] (state, resFastPlan) {
     state.resFastPlan = resFastPlan
   },
-  [types.SAVE_RES_MONITORING] (state, resMonitoring) {
-    state.resMonitoring = resMonitoring
-  },
   [types.SAVE_THEME_COLORS](state, colors) {
     state.backgroundColor = colors.backgroundColor
     state.primaryColor = colors.primaryColor
     state.secondaryColor = colors.secondaryColor
+    state.textColor = colors.textColor
   }
 }
 
@@ -273,10 +271,10 @@ export const actions = {
   async runMonitoringProject({commit}, payload) {
     const data = ipcRenderer.sendSync('runMonitoring', payload)
     if (typeof (data) == 'string') {
-      commit(types.SAVE_RES_MONITORING, JSON.parse(data))      
+      return JSON.parse(data)
     }
     else {
-      commit(types.SAVE_RES_MONITORING, data)
+      return data
     }
   },
   async runGasCondensateProject({commit}, payload) {

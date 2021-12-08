@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-lg-7 m-auto">
       <div class="card" style="margin-top:20px">
-        <div class="card-header gf-header" style="background:yellow;color:rgb(13, 110, 253);font-size:3rem">
+        <div class="card-header gf-header" style="background:var(--background-color);color:rgb(13, 110, 253);font-size:3rem">
            Resend verification
         </div>
         <form @submit.prevent="send" @keydown="form.onKeydown($event)">
@@ -44,7 +44,7 @@
 import Form from 'vform'
 
 export default {
-  middleware: 'guest',
+  middleware: ['guest', 'theme'],
 
   metaInfo () {
     return { title: this.$t('verify_email') }

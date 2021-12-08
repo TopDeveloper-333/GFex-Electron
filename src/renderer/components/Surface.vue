@@ -36,7 +36,7 @@ import { mapState } from 'vuex'
 
 export default {
 
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   data() {
     return {

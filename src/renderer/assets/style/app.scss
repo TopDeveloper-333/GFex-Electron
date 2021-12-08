@@ -19,7 +19,7 @@ body {
 .gf-header {
   //padding: 0.8rem 1rem !important;
   background:var(--primary-color);
-  color:white;
+  color:var(--text-color);
   text-align:center; 
   font-size:4rem !important;
   font-weight: 600;
@@ -67,7 +67,7 @@ body {
 }
 .gf-button-done {
   font-size : 1.5rem !important;
-  color: white !important;
+  color: var(--text-color) !important;
   text-transform: uppercase !important;
   background-color: var(--secondary-color) !important;
   border: 1px solid var(--secondary-color);
@@ -101,7 +101,7 @@ td:empty::after{
 .jexcel_textarea {
   top: -3999px !important;
   left: -3999px !important;
-  color: white !important;
+  color: var(--text-color) !important;
 }
 
 thead.resizable {
@@ -144,6 +144,7 @@ thead.resizable {
 
 .gf-modal-header{
   background-color: var(--primary-color);
+  color: var(--text-color);
   border-radius: 3px 3px 0px 0px;
   text-align: center;
   padding: 10px;
@@ -151,7 +152,7 @@ thead.resizable {
 
 /* Modal Content */
 .gf-modal-content {
-  background-color: #fefefe;
+  background-color: white;
   margin: auto;
   // padding: 20px;
   border: 1px solid #888;
@@ -162,7 +163,7 @@ thead.resizable {
 
 /* The Close Button */
 .gf-close {
-  color: #ffffff;
+  color: var(--text-color);
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -195,18 +196,18 @@ thead.resizable {
   font-size: 22px;
   background-color: var(--secondary-color) !important;
   border-top: 0px !important;
-  color: white;
+  color: var(--text-color);
 }
 
 .jexcel > tbody > tr > td {
   font-size: 22px;
   background-color: var(--secondary-color);
   border-top: 0px !important;
-  color: white;
+  color: var(--text-color);
 }
 .jexcel .highlight-selected {
   background-color: var(--secondary-color) !important;
-  color: white !important;
+  color: var(--text-color) !important;
 }
 
 .jexcel .highlight-bottom {
@@ -235,6 +236,7 @@ thead.resizable {
   --background-color : rgb(240, 240, 0);
   --primary-color : #0d6efd;
   --secondary-color: green;
+  --text-color : white;
   --axis-color : white;
   --graph-color : #ffbb78;
   --graph1-color : #b9ff78;
@@ -327,6 +329,7 @@ tspan {
 }
 
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+  color: var(--text-color);
   background-color: var(--primary-color) !important;
   border-color: var(----primary-color);
 }

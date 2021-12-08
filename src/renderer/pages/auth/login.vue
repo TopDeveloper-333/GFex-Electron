@@ -10,7 +10,7 @@
     <div class="col-lg-7 m-auto">
       <div class="card" style="margin-top:20px">
         <form @submit.prevent="login" @keydown="form.onKeydown($event)">
-        <div class="card-header gf-header" style="background:yellow;color:rgb(13, 110, 253);font-size:3rem">
+        <div class="card-header gf-header" style="background:var(--background-color);color:var(--text-color);font-size:3rem">
            LogIn
         </div>
         <div class="row" style="margin-top:32px">
@@ -42,7 +42,7 @@
                 {{ $t('remember_me') }}
               </checkbox> -->
 
-              <router-link :to="{ name: 'password.request' }" class="small ms-auto my-auto">
+              <router-link :to="{ name: 'password.request' }" class="small ms-auto my-auto" style="color:var(--primary-color)">
                 {{ $t('forgot_password') }}
               </router-link>
             </div>
@@ -78,7 +78,7 @@ export default {
     LoginWithGithub
   },
 
-  middleware: 'guest',
+  middleware: ['guest', 'theme'],
 
   metaInfo () {
     return { title: this.$t('login') }

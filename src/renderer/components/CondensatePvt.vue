@@ -57,7 +57,7 @@
     <div id="plotModal" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close" id="plot-gf-close">&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -81,7 +81,7 @@ import Loading from 'vue-loading-overlay';
 
 export default {
   name: 'CondensatePvt',
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   components: {
     Multiselect,
@@ -382,7 +382,7 @@ export default {
       // Initialize variables
       // ----------------------------------------------------------
       document.documentElement.style.setProperty('--axis-color', this.axisColor);
-      document.documentElement.style.setProperty('--secondary-color', this.graphColor);
+      // document.documentElement.style.setProperty('--secondary-color', this.graphColor);
 
       var axisX = this.axisX.name
       var columns = [

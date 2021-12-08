@@ -36,7 +36,7 @@
               </div>
 
               <div style="display:flex;margin-bottom:6px;text-align:left" class="row" v-show="bShowPlot == false">
-                <textarea v-model.lazy="dataContent" style="margin-left:10px;color:white;font-weight: 400;"></textarea>
+                <textarea v-model.lazy="dataContent" style="margin-left:10px;font-weight: 400;"></textarea>
               </div>
 
 
@@ -58,7 +58,7 @@
     <div id="exitModal" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close" id="gf-exit-cancel">&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -78,7 +78,7 @@
     <div id="savePlotModal" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close" id="gf-exit-cancel-plot">&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -96,7 +96,7 @@
     <div id="messageModal" class="gf-modal">
       <div class="gf-modal-content">
         <div class="gf-modal-header">
-          <span class="gf-comment" style="margin-left:30px;color:white">FastPlan* Gas & Gas Condensate</span>
+          <span class="gf-comment" style="margin-left:30px">FastPlan* Gas & Gas Condensate</span>
           <span class="gf-close" id="gf-exit-cancel-message">&times;</span>
         </div>
         <p class="gf-comment" style="margin-top:6px !important; margin-bottom:6px !important;"><{{projectName}}> Field Project</p>
@@ -126,7 +126,7 @@ import Graph from '~/components/Graph.vue';
 // import axios from 'axios'
 export default {
   name: 'FastplanResult',
-  middleware: 'auth',
+  middleware: ['auth', 'theme'],
 
   metaInfo () {
     return { title: this.$t('Fastplan Result') }
@@ -239,7 +239,6 @@ export default {
       await store.dispatch('project/saveProject', payload)
     },
     onChange: function(event) {
-      debugger
       if (this.outputFile != null && this.outputFile.name == 'PLOT_OF') {
         this.dataContent = this.resFastPlan.PLOT_OF
         this.options = [
@@ -482,6 +481,7 @@ textarea{
     overflow-x: auto;
     resize: none;
     background-color: var(--secondary-color);
+    color: var(--text-color);
     font-family: monospace !important;
     font-size: 1.25rem !important;
 }
