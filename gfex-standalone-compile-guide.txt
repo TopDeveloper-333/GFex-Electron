@@ -1,0 +1,16 @@
+1. Install node.js package
+Install node version v14 setup executable file
+URL : https://nodejs.org/en/download/releases/
+download Node.js 14.16.0
+
+2. Copy FastPlan executable files into Standalone app source directory
+Overwrite the executable file into {STANDALONE_SOURCE_DIRECTORY}\src\data directory
+
+3. Make standalone application
+Run the Cmd.exe in {STANDALONE_SOURCE_DIRECTORY} directory
+and then type the following line
+# npm run build
+
+After done this, standalone application and setup files will be generated in in {STANDALONE_SOURCE_DIRECTORY} directory.
+
+

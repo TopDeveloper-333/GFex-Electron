@@ -291,8 +291,14 @@ export default {
       
       if ((isNaN(value) == true) || (value < 0)) 
       {
-        this.markInvalidCell(cell)
-        this.isVerticalModelValidate = false
+        if (cellName == 'F1' && isNaN(value) == false) {
+          // enable negative value for "Skin" field
+          this.markNormalCell(cell)
+        }
+        else {
+          this.markInvalidCell(cell)
+          this.isVerticalModelValidate = false
+        }
       }
       else {
         this.markNormalCell(cell)
@@ -313,8 +319,14 @@ export default {
       
       if ((isNaN(value) == true) || (value < 0)) 
       {
-        this.markInvalidCell(cell)
-        this.isHorizontalModelValidate = false
+        if (cellName == 'F1' && isNaN(value) == false) {
+          // enable negative value for "Skin" field
+          this.markNormalCell(cell)
+        }
+        else {
+          this.markInvalidCell(cell)
+          this.isHorizontalModelValidate = false
+        }
       }
       else {
         this.markNormalCell(cell)

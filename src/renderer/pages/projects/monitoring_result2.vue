@@ -6,16 +6,17 @@
              :is-full-page="fullPage"></loading>
       <div class="card mb-3">
         <div class="card-header gf-header">
-          <img src="/assets/image/LOGO_GFEX.png" style="max-width:150px;max-height:180px;margin-left:-7px;float:left">
-          FastPlan* Gas & Gas Condensate<br>
-          <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
+          <img src="../../assets/image/LOGO_GFEX.png" style="max-width:150px;max-height:180px;margin-left:-7px;float:left">
+          <div style="margin:auto">FastPlan* Gas & Gas Condensate<br>
+            <p style="font-size:3rem !important">Conventional and Shale Reservoirs</p>
+          </div>
         </div>
         <div class="row g-0" style="background-color:var(--background-color);">
           <div class="col-md-10 offset-md-1">
             <div class="card-body">
               <h3 class="card-title gf-title"><{{projectName}}> Field Project
               </h3>
-              <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Select plots</u></p>
+              <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;">SYSTEM MONITORING / WORK-OVER / DRILLING RESULTS</p>
 
               <div style="display:flex;margin-bottom:6px;text-align:left" class="row">
                 <div id="plotSheet"></div>

@@ -16,7 +16,7 @@
             <div class="card-body">
               <h3 class="card-title gf-title"><{{projectName}}> Field Project
               </h3>
-              <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;"><u>Results</u></p>
+              <p class="card-text" style="font-size: 2.4rem !important;text-align: center !important;">SYSTEM MONITORING / WORK-OVER / DRILLING RESULTS</p>
 
               <div style="display:flex;margin-bottom:6px;text-align:left" class="row">
                 <div class="col-3">

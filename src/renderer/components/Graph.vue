@@ -87,8 +87,10 @@ export default {
       isLoading: false,
       fullPage: true,
       maxItems : 200,
-      selectedStep: null,
-      steps: []
+      selectedStep: {name: 'Step: 1', value: 1},
+      steps: [
+        {name: 'Step: 1', value: 1}
+      ]
     }
   },
 
@@ -208,12 +210,13 @@ export default {
         columns[this.axisY.length+1] = []
         columns[this.axisY.length+1][0] = this.axisY2.name
 
+        debugger
         y2Max = 0
         for (let j = 1; j <= Math.floor(numRows/steps); j++) {
           columns[this.axisY.length+1][j] = this.data[(j-1) * steps][this.axisY2.index]
 
-          if (y2Max < parseFloat(this.data[j-1][this.axisY2.index]))
-            y2Max = parseFloat(this.data[j-1][this.axisY2.index])
+          if (y2Max < parseFloat(this.data[(j-1) * steps][this.axisY2.index]))
+            y2Max = parseFloat(this.data[(j-1) * steps][this.axisY2.index])
         }
 
         axes[this.axisY2.name] = 'y2'

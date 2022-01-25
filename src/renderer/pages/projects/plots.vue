@@ -255,9 +255,10 @@ export default {
       }
 
       // calculate y2max value
+      debugger
       let _y2Max = 100
       if (data.length >= 3) {
-        for (let j = 0; j < data.length / 2; j++) {
+        for (let j = 1; j < (data.length + 1) / 2; j++) {
           for (let i = 1; i< data[j*2].length; i++) {
             if (_y2Max < parseFloat(data[j*2][i])) 
               _y2Max = parseFloat(data[j*2][i])            
