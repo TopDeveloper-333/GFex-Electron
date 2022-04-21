@@ -18,7 +18,9 @@ export default async (to, from, next) => {
   //   }
   // } 
   
-  next({ name: ''})
+  next()
+  
+  // next({ name: ''})
 
   // if (!store.getters['auth/check']) {
   //   Cookies.set('intended_url', to.path)
